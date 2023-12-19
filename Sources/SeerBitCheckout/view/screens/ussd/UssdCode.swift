@@ -1,0 +1,162 @@
+//
+//  UssdCode.swift
+//  seerbit_native_ios_sdk
+//
+//  Created by Miracle Eugene on 20/10/2023.
+//
+
+import SwiftUI
+
+struct UssdCode: View {
+    
+    @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
+    @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
+    @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
+    
+    @State var ussdCode: String
+    @State var transactionReference: String
+    @State var queryErrorMessage: String = ""
+    @State var showSuccesDialog: Bool = false
+    @State var showErrorDialog: Bool  =  false
+    @State var confirmingTransaction: Bool  = false
+    @State private var showToast: Bool = false
+    @State private var showPaymentMethods: Bool = false
+    
+    @State var goToCard: Bool = false
+    @State var goToTransfer: Bool = false
+    @State var goToMomo: Bool = false
+    @State var goToBankAccount: Bool = false
+    
+    
+    var body: some View {
+        
+        VStack(alignment: .center, spacing: 0){
+            CustomHeader(merchantDetails: merchantDetailsViewModel.merchantDetails!)
+            Spacer().frame(height: 20)
+            ScrollView(showsIndicators: false){
+                VStack{
+                    if(confirmingTransaction){
+                        Text("Hold on tight while we confirm this payment")
+                            .fontWeight(.regular)
+                            .font(.system(size: 14))
+                            .foregroundColor(Color("dark"))
+                            .frame(alignment: .leading)
+                        Spacer().frame(height: 20)
+                    }else {
+                        Text("")
+                            .fontWeight(.regular)
+                            .foregroundColor(Color("dark"))
+                            .frame(alignment: .leading)
+                    }
+                    if (confirmingTransaction) {
+                        VStack{
+                            LoadingIndicator()
+                            Spacer().frame(height: 30)
+                        }
+                    }else{
+                        HStack{
+                            Spacer()
+                            Text(ussdCode).font(.system(size: 28, design: .rounded)).fontWeight(.heavy)
+                            Spacer()
+                        }
+                        .padding(10)
+                        .background(Color("seaShell"))
+                        .frame(width: 350)
+                        .clipShape(RoundedRectangle(cornerRadius: 5))
+                        
+                        Spacer().frame(height: 20)
+                        Text("Click to copy code")
+                            .font(.system(size: 15))
+                            .onTapGesture {
+                                let clipboard = UIPasteboard.general
+                                clipboard.string = ussdCode
+                                showToast = true
+                            }
+                        
+                        Spacer().frame(height: 15)
+                        CustomButton(buttonLabel: "Confirm Payment"){
+                            print("confirm payment")
+                            confirmingTransaction = true
+                            queryTransactionViewModel.queryTransaction(reference:transactionReference)
+                        }
+                        Spacer().frame(height: 15)
+                    }
+                }
+                if(showPaymentMethods){
+                    PaymentOptions(onCard: {goToCard = true}, onUssd: {withAnimation{showPaymentMethods.toggle()}}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {}, merchantDetails: merchantDetailsViewModel.merchantDetails)
+                }else{
+                    if(confirmingTransaction){Spacer().frame(height: 50)}else{Spacer().frame(height: 120)}
+                    ChangePaymentMethod(onChange: {
+                        if (true){showPaymentMethods.toggle()}
+                    }, onCancel: {})
+                }
+                Spacer()
+                
+            }
+            .overlay(
+                overlayView: CustomToast(toastDetails: ToastDetails(title: "code copied"), showToast: $showToast), show: $showToast)
+            CustomFooter()
+            
+            NavigationLink(destination: CardInitiate(),
+                           isActive: $goToCard, label: {EmptyView()})
+            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
+                           isActive: $goToTransfer, label: {EmptyView()})
+            NavigationLink(destination: MomoInitiate(),
+                           isActive: $goToMomo, label: {EmptyView()})
+            NavigationLink(destination: BankAccountInitiate(),
+                           isActive: $goToBankAccount, label: {EmptyView()})
+        }
+        .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
+            
+            if(queryTransactionResponse != nil
+               && queryTransactionResponse?.data?.code == "00"){
+                
+                // transaction confirmed
+                showSuccesDialog = true
+                confirmingTransaction = false
+                
+            }else if(queryTransactionResponse != nil
+                     && queryTransactionResponse?.data?.code == "S20"){
+                queryTransactionViewModel.queryTransaction(
+                    reference:transactionReference
+                )
+            }else if(queryTransactionResponse != nil
+                     && queryTransactionResponse?.data?.code != "S20" && queryTransactionResponse?.data?.code != "00"){
+                
+                confirmingTransaction = false
+                queryErrorMessage = queryTransactionViewModel.queryTransactionResponse?.message ?? "Transaction query process has failed"
+                showErrorDialog = true
+            }
+        }
+        .onReceive(queryTransactionViewModel.$queryTransactionResponseError){queryTransactionResponseError in
+            
+            if(queryTransactionResponseError != nil){
+                confirmingTransaction = false
+                queryErrorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query process has failed"
+                showErrorDialog = true
+            }
+            
+        }
+        .sheet(isPresented: $showErrorDialog){
+            ErrorModal(
+                description:queryErrorMessage,
+                buttonLeftAction: {},
+                buttonRightAction: {},
+                singleButtonAction: {showErrorDialog.toggle()})
+            .interactiveDismissDisabled(true)
+            .presentationDetents([.fraction(0.4)])
+        }
+        .sheet(isPresented: $showSuccesDialog){
+            SuccessModal(
+                buttonAction: {
+                    // close the sdk
+                    showSuccesDialog.toggle()
+                }
+            )
+            .interactiveDismissDisabled(true)
+            .presentationDetents([.fraction(0.4)])
+        }
+        .padding(.horizontal,20)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
