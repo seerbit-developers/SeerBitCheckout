@@ -70,10 +70,11 @@ struct InitializationScreen: View {
             }
             NavigationLink(destination: CardInitiate(),
                            isActive: $sdkReady, label: {EmptyView()})
-            .environmentObject(merchantDetailsViewModel)
-            .environmentObject(clientDetailsViewModel)
-            .navigationBarBackButtonHidden(true)
+            
         }
+        .environmentObject(merchantDetailsViewModel)
+        .environmentObject(clientDetailsViewModel)
+        .navigationBarBackButtonHidden(true)
         .onReceive(merchantDetailsViewModel.$merchantDetails){merchantDetails in
             if(merchantDetails?.responseCode  == "00" ){
 
