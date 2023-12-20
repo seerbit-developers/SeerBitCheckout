@@ -26,8 +26,10 @@ let package = Package(
                 .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI")
             ],
 //            path: "Sources",
-            resources: [.process("Sources/SeerBitCheckout/PackageAssets.xcassets/Images"),
-                        .process("Sources/SeerBitCheckout/customFonts"), .copy("Sources/SeerBitCheckout/PackageAssets.xcassets/Images/checkout_logo.png")]
+            resources: [
+//                .process("Sources/SeerBitCheckout/PackageAssets.xcassets/Images"),
+//                        .process("Sources/SeerBitCheckout/customFonts"),
+                .copy("Sources/SeerBitCheckout/PackageAssets.xcassets/Images")]
             
         ),
         .testTarget(
