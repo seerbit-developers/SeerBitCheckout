@@ -32,7 +32,7 @@ struct InitializationScreen: View {
                         .environmentObject(clientDetailsViewModel)
                         .navigationBarBackButtonHidden(true)
                 }else {
-                    Image("checkout_logo")
+                    Image("checkout_logo", bundle: Bundle.module)
                         .resizable()
                         .frame(width: 60, height: 60)
                         .aspectRatio(contentMode: .fit)

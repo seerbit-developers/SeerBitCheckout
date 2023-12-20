@@ -27,7 +27,7 @@ let package = Package(
             ],
 //            path: "Sources",
             resources: [.process("Sources/SeerBitCheckout/PackageAssets.xcassets/Images"),
-                .process("Sources/SeerBitCheckout/customFonts")]
+                        .process("Sources/SeerBitCheckout/customFonts"), .copy("Sources/SeerBitCheckout/PackageAssets.xcassets/Images/checkout_logo.png")]
             
         ),
         .testTarget(
