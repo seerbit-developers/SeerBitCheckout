@@ -9,16 +9,30 @@ import SwiftUI
 import SwiftData
 
 @available(iOS 16.0, *)
- public struct InitSeerbitCheckout: View {
+public struct InitSeerbitCheckout: View {
     
-     public var body: some View {
+    var amount: Double
+    var fullName: String
+    var mobileNumber: String
+    var publicKey: String
+    var email: String
+    
+    public init (amount:Double, fullName:String, mobileNumber:String, publicKey:String, email:String){
+        self.amount = amount
+        self.fullName = fullName
+        self.mobileNumber = mobileNumber
+        self.publicKey = publicKey
+        self.email = email
+    }
+    
+    public var body: some View {
         VStack{
-                InitializationScreen(
-                    amount: "2",
-                    fullName: "eugene miracle",
-                    mobileNumber: "08131248253",
-                    publicKey: "SBTESTPUBK_t4G16GCA1O51AV0Va3PPretaisXubSw1",
-                    email: "qwdfef@gmail.com")
+            InitializationScreen(
+                amount: String(amount),
+                fullName: fullName,
+                mobileNumber: mobileNumber,
+                publicKey: publicKey,
+                email: email                )
         }
     }
 }

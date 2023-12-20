@@ -13,7 +13,6 @@ struct CustomHeader: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
-    
     @State var amount: String = ""
     
     
