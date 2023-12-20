@@ -30,7 +30,7 @@ let package = Package(
                 
 //                .process("Sources/SeerBitCheckout/PackageAssets.xcassets/Images"),
 //                        .process("Sources/SeerBitCheckout/customFonts"),
-                .copy("Sources/SeerBitCheckout/PackageAssets.xcassets/Images")]
+                .copy("Sources/SeerBitCheckout/PackageAssets/Images")]
             
         ),
         .testTarget(
