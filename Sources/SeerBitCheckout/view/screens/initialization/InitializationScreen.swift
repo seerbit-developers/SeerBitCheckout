@@ -26,12 +26,11 @@ struct InitializationScreen: View {
         VStack(alignment: .center){
             
             if merchantDetailsViewModel.merchantDetails  != nil {
-                if sdkReady {
-                    NavigationStack{CardInitiate()}
-                        .environmentObject(merchantDetailsViewModel)
-                        .environmentObject(clientDetailsViewModel)
-                        .navigationBarBackButtonHidden(true)
-                }else {
+                if !sdkReady {
+//                    NavigationStack{CardInitiate()}
+//                        .environmentObject(merchantDetailsViewModel)
+//                        .environmentObject(clientDetailsViewModel)
+//                        .navigationBarBackButtonHidden(true)
                     Image("checkout_logo")
                         .resizable()
                         .frame(width: 60, height: 60)
@@ -39,6 +38,14 @@ struct InitializationScreen: View {
                         .clipShape(RoundedRectangle(cornerRadius: 2))
                     Spacer().frame(height: 20)
                     Text(merchantDetailsViewModel.merchantDetails?.message ?? "An error has occured. Please be sure you hava a correct live public key")
+                }else {
+//                    Image("checkout_logo")
+//                        .resizable()
+//                        .frame(width: 60, height: 60)
+//                        .aspectRatio(contentMode: .fit)
+//                        .clipShape(RoundedRectangle(cornerRadius: 2))
+//                    Spacer().frame(height: 20)
+//                    Text(merchantDetailsViewModel.merchantDetails?.message ?? "An error has occured. Please be sure you hava a correct live public key")
                 }
             }else if merchantDetailsViewModel.merchantDetailsError == nil{
                 Image("checkout_logo")
@@ -61,6 +68,11 @@ struct InitializationScreen: View {
                 Text("Initialization failed. A network error occured. Please try again")
                     .padding(30)
             }
+            NavigationLink(destination: CardInitiate(),
+                           isActive: $sdkReady, label: {EmptyView()})
+            .environmentObject(merchantDetailsViewModel)
+            .environmentObject(clientDetailsViewModel)
+            .navigationBarBackButtonHidden(true)
         }
         .onReceive(merchantDetailsViewModel.$merchantDetails){merchantDetails in
             if(merchantDetails?.responseCode  == "00" ){
