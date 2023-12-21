@@ -53,7 +53,7 @@ struct InitializationScreen: View {
                 LoadingIndicator()
                 
             } else if merchantDetailsViewModel.merchantDetailsError != nil{
-                Image("checkout_logo")
+                Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
                     .resizable()
                     .frame(width: 60, height: 60)
                     .aspectRatio(contentMode: .fit)
