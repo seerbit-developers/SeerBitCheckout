@@ -21,7 +21,7 @@ struct CustomHeader: View {
             Spacer().frame(height: 20)
             HStack(alignment: VerticalAlignment.center){
                 if merchantDetails.payload?.logo  == nil {
-                    Image("checkout_logo")
+                    Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
                         .resizable()
                         .frame(width: 50, height: 50)
                         .aspectRatio(contentMode: .fit)
@@ -43,12 +43,12 @@ struct CustomHeader: View {
                 VStack(alignment: HorizontalAlignment.trailing){
                     Text(clientDetailsViewModel.fullName)
                         .fontWeight(.bold)
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .font(.system(size: 14))
                     
                     Text(clientDetailsViewModel.email)
                         .fontWeight(.regular)
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .font(.system(size: 14))
                 }
             }.frame(maxWidth: .infinity)
