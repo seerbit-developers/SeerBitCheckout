@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+//import PackageResources
 
 struct InitializationScreen: View {
     @StateObject private var merchantDetailsViewModel = MerchantDetailsViewModel()
@@ -32,7 +33,7 @@ struct InitializationScreen: View {
                         .environmentObject(clientDetailsViewModel)
                         .navigationBarBackButtonHidden(true)
                 }else {
-                    Image("checkout_logo", bundle: Bundle.module)
+                    Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
                         .resizable()
                         .frame(width: 60, height: 60)
                         .aspectRatio(contentMode: .fit)
