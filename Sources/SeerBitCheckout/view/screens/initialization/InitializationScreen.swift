@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-//import PackageResources
+
 
 struct InitializationScreen: View {
     @StateObject private var merchantDetailsViewModel = MerchantDetailsViewModel()
@@ -42,7 +42,7 @@ struct InitializationScreen: View {
                     Text(merchantDetailsViewModel.merchantDetails?.message ?? "An error has occured. Please be sure you hava a correct live public key")
                 }
             }else if merchantDetailsViewModel.merchantDetailsError == nil{
-                Image("checkout_logo")
+                Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
                     .resizable()
                     .frame(width: 60, height: 60)
                     .aspectRatio(contentMode: .fit)

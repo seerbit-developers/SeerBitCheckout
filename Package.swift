@@ -27,7 +27,8 @@ let package = Package(
             ],
             path: "Sources",
             resources: [
-                .process("SeerBitCheckout/Media.xcassets")
+                .process("SeerBitCheckout/Media.xcassets"),
+                .copy("SeerBitCheckout/Media.xcassets")
             ]
             
         ),
