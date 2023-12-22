@@ -26,10 +26,7 @@ let package = Package(
                 .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI")
             ],
             path: "Sources",
-            resources: [
-                .process("SeerBitCheckout/Media.xcassets"),
-//                .copy("SeerBitCheckout/Media.xcassets")
-            ]
+            resources: [.process("SeerBitCheckout/Media.xcassets")]
             
         ),
         .testTarget(
