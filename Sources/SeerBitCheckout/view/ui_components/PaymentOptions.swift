@@ -54,8 +54,8 @@ struct PaymentOptions: View {
             Spacer().frame(height: 60)
             CustomButton(
                 buttonLabel: "Cancel payment",
-                backgroundColor: Color("fadedRed"),
-                textForegroundColor: Color("pureRed")
+                backgroundColor: Color(uiColor: UIColor(named: "fadedRed", in: .module, compatibleWith: nil)!),
+                textForegroundColor: Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!)
             ) {onCancelPayment()}
                 .padding(.horizontal, 5)
                 .padding(.vertical, 10)

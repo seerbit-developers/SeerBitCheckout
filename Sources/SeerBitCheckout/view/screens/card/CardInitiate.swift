@@ -51,10 +51,10 @@ struct CardInitiate: View {
                 }else{
                     HStack{
                         CustomInput(value: $cardNumber, placeHolder: "Card Number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)
-                        HStack{Image(cardIcon)}
+                        HStack{Image(uiImage: UIImage(named: cardIcon, in: .module, with: nil)!)}
                     }
                     .padding(.horizontal, 11)
-                    .border(Color("seaShell"), width: 2)
+                    .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     Spacer().frame(height: 10)
                     HStack{
