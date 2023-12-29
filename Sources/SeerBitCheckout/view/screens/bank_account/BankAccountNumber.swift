@@ -11,7 +11,7 @@ struct BankAccountNumber: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
-    //    @StateObject  var cardViewModel: CardViewModel = CardViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     
     @State private var showPaymentMethods: Bool = false
@@ -58,10 +58,10 @@ struct BankAccountNumber: View {
                          : showBvnInput ? "Please enter your BVN"
                          : showDobInput ? "Please enter your birthday" : ""
                     )
-                        .fontWeight(.regular)
-                        .foregroundColor(Color("dark"))
-                        .frame(alignment: .leading)
-                        .font(.system(size: 15))
+                    .fontWeight(.regular)
+                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                    .frame(alignment: .leading)
+                    .font(.system(size: 15))
                     Spacer().frame(height: 20)
                     
                     if(showAccountNumberInput){
@@ -77,15 +77,15 @@ struct BankAccountNumber: View {
                             }, label: {
                                 HStack{
                                     Text(dateOfBirth)
-                                        .foregroundColor(Color("starDust"))
+                                        .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                         .fontWeight(.bold)
                                         .font(.system(size: 14))
                                     Spacer()
-                                    Image(systemName: "chevron.down").foregroundColor(Color("starDust"))
+                                    Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                 }
                                 .padding(11)
                                 .frame(width: .infinity)
-                                .border(Color("seaShell"), width: 2)
+                                .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                             })
                         }
@@ -102,26 +102,17 @@ struct BankAccountNumber: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (authorisingWithBank == false){showPaymentMethods.toggle()}
-                }, onCancel: {})
+                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             Spacer()
             CustomFooter()
-            
-            //            NavigationLink(destination: CardBankAuthentication(redirectUrl: cardViewModel.cardInitiateResponse?.data?.payments?.redirectURL ?? ""),
-            //                           isActive: $goToRedirect, label: {EmptyView()})
-            //
-            //            NavigationLink(destination: CardPin(),
-            //                           isActive: $goToCardPin, label: {EmptyView()})
-            //
-            //            NavigationLink(destination: SelectUssdBank(),
-            //                           isActive: $goToUssd, label: {EmptyView()})
-            //            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-            //                           isActive: $goToTransfer, label: {EmptyView()})
-            //            NavigationLink(destination: MomoInitiate(),
-            //                           isActive: $goToMomo, label: {EmptyView()})
-            //            NavigationLink(destination: BankAccountInitiate(),
-            //                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(
                 description:errorDescription,
@@ -133,10 +124,10 @@ struct BankAccountNumber: View {
         }
         .sheet(isPresented: $showDobInputSheet){
             DatePicker(
-                           "Select Date",
-                           selection: $dob,
-                           displayedComponents: [.date]
-                       )
+                "Select Date",
+                selection: $dob,
+                displayedComponents: [.date]
+            )
             .datePickerStyle(.graphical)
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.55)])

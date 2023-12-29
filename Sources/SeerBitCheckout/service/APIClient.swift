@@ -8,6 +8,7 @@
 import Foundation
 
 let bearerToken = "68826aea9005de7812429b7983838b06e2c7fffbb3d9487f33bc51c943a3a499"
+internal let baseUrl = "https://seerbitapi.com/checkout"
 
 enum NetworkErrors : Error {
     case networkError(description: String)
@@ -16,7 +17,7 @@ enum NetworkErrors : Error {
     case apiError(description: String)
 }
 
-public enum HTTPRequestMethod: String {
+internal enum HTTPRequestMethod: String {
     case get="GET"
     case post="POST"
     case put="PUT"
@@ -62,6 +63,7 @@ class APIClient {
           
               do {
                 let decoder = JSONDecoder()
+//                  decoder.keyDecodingStrategy = .convertFromSnakeCase
                 let decodedData = try decoder.decode(Response.self, from: data)
                   completion(.success(decodedData))
               } catch {

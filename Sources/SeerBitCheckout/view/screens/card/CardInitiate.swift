@@ -12,6 +12,7 @@ struct CardInitiate: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
+    @StateObject  var transactionStatusDataViewModel: TransactionStatusDataViewModel = TransactionStatusDataViewModel()
     
     @State private var cardNumber: String = ""
     @State private var expiryDate: String = ""
@@ -32,6 +33,7 @@ struct CardInitiate: View {
     @State var goToTransfer: Bool = false
     @State var goToMomo: Bool = false
     @State var goToBankAccount: Bool = false
+    @State var startSeerbitCheckout: Bool? = nil
     
     
     var body: some View {
@@ -51,7 +53,11 @@ struct CardInitiate: View {
                 }else{
                     HStack{
                         CustomInput(value: $cardNumber, placeHolder: "Card Number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)
-                        HStack{Image(uiImage: UIImage(named: cardIcon, in: .module, with: nil)!)}
+                        HStack{
+                            if(!cardIcon.isEmpty){
+                                Image(uiImage: UIImage(named: cardIcon, in: .module, with: nil)!)
+                            }
+                        }
                     }
                     .padding(.horizontal, 11)
                     .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
@@ -84,26 +90,18 @@ struct CardInitiate: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (initiatingCardTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {})
+                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             Spacer()
             CustomFooter()
-            
-            NavigationLink(destination: CardBankAuthentication(redirectUrl: cardViewModel.cardInitiateResponse?.data?.payments?.redirectURL ?? ""),
-                           isActive: $goToRedirect, label: {EmptyView()})
-            
-            NavigationLink(destination: CardPin(),
-                           isActive: $goToCardPin, label: {EmptyView()})
-            
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToRedirect){CardBankAuthentication(redirectUrl: cardViewModel.cardInitiateResponse?.data?.payments?.redirectURL ?? "")}
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(cardViewModel.$cardInitiateResponse){ cardInitiateResponse in
             
             if(cardInitiateResponse?.data?.code == "S20"){

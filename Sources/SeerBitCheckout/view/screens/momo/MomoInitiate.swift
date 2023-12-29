@@ -13,6 +13,7 @@ struct MomoInitiate: View {
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var momoViewModel: MomoViewModel = MomoViewModel()
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var mobileNumber: String = ""
     @State private var providerAvailable: Bool = false
@@ -45,7 +46,7 @@ struct MomoInitiate: View {
                     Text("Hold on tight while we confirm this payment")
                         .fontWeight(.regular)
                         .font(.system(size: 14))
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                     Spacer().frame(height: 20)
                 }
@@ -64,7 +65,7 @@ struct MomoInitiate: View {
                         CustomInput(value: $mobileNumber, placeHolder: "Mobile number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)
                     }
                     .padding(.horizontal, 11)
-                    .border(Color("seaShell"), width: 2)
+                    .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     Spacer().frame(height: 20)
                     
@@ -77,15 +78,15 @@ struct MomoInitiate: View {
                         }, label: {
                             HStack{
                                 Text(chosenProvider)
-                                    .foregroundColor(Color("starDust"))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))
                                 Spacer()
-                                Image(systemName: "chevron.down").foregroundColor(Color("starDust"))
+                                Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                             }
                             .padding(11)
                             .frame(width: .infinity)
-                            .border(Color("seaShell"), width: 2)
+                            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                             .clipShape(RoundedRectangle(cornerRadius: 4))
                         })
                     }
@@ -98,7 +99,7 @@ struct MomoInitiate: View {
                                         
                                         Button( action: {
                                             showProviders.toggle()
-                                            chosenProvider = network.networks ?? ""                                            
+                                            chosenProvider = network.networks ?? ""
                                         }, label: {
                                             VStack{
                                                 HStack{
@@ -112,7 +113,7 @@ struct MomoInitiate: View {
                                                 VStack{
                                                     Divider()
                                                         .frame(height: 0.3)
-                                                        .overlay(Color("starDust"))
+                                                        .overlay(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                                 }
                                             }
                                         })
@@ -124,12 +125,12 @@ struct MomoInitiate: View {
                             }
                             .frame(alignment: .leading)
                             .padding(.horizontal)
-                            .background(Color("porcelain"))
+                            .background(Color(uiColor: UIColor(named: "porcelain", in: .module, compatibleWith: nil)!))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         .frame(height: 150, alignment: .leading)
                         .padding(0)
-                        .border(Color("seaShell"), width: 2)
+                        .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
@@ -151,23 +152,18 @@ struct MomoInitiate: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (initiatingMomoTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {})
+                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             Spacer()
             CustomFooter()
-            
-            NavigationLink(destination: MomoOtp(linkingReference: linkingRefenece),
-                           isActive: $goToMomoOtp, label: {EmptyView()})
-            
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToMomoOtp){MomoOtp(linkingReference: linkingRefenece)}
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(momoViewModel.$momoProvidersResponse){momoProvidersResponse in
             
             if(momoProvidersResponse != nil && momoProvidersResponse?.count ?? 0 > 0){

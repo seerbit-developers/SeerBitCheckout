@@ -15,7 +15,7 @@ class UssdService {
     
     func initiateUssd(body:UssdInitiateRequestDataModel, completion: @escaping (Result<UssdInitiateResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/initiates",
+            url: "\(baseUrl)/initiates",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion

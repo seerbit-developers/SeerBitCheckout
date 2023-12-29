@@ -25,25 +25,23 @@ struct PaymentOptionItem: View {
                     Spacer()
                     if title == "Debit/Credit Card"{
                         HStack{
-                            Image("verve_icon")
-                            Image("visa_icon")
-                            Image("mastercard_icon")
+                            Image(uiImage: UIImage(named: "verve_icon", in: .module, with: nil)!)
+                            Image(uiImage: UIImage(named: "visa_icon", in: .module, with: nil)!)
+                            Image(uiImage: UIImage(named: "mastercard_icon", in: .module, with: nil)!)
                         }
                     }
                     
                     if title.lowercased() == "ussd"{
-                       Text("*bank ussd code#")
+                        Text("*bank ussd code#")
                             .foregroundColor(.black)
                             .fontWeight(.regular)
                             .font(.system(size: 11))
                     }
-                    
                 }
                 .padding(15)
-                .background(Color("seaShell"))
+                .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
                 .frame(width: 350)
                 .clipShape(RoundedRectangle(cornerRadius: 5))
-                
             })
         }
     }

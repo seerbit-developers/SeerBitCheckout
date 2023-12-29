@@ -47,7 +47,7 @@ struct CustomPinComponent: View {
             .frame(width: width, height: height)
             .padding(.horizontal, 11)
             .padding(.vertical, 12)
-            .border(Color("seaShell"), width: CGFloat(2))
+            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: CGFloat(2))
             .clipShape(RoundedRectangle(cornerRadius: 4))
             Spacer().frame(width: 40)
             
@@ -68,7 +68,7 @@ struct CustomPinComponent: View {
             .frame(width: width, height: height)
             .padding(.horizontal, 11)
             .padding(.vertical, 12)
-            .border(Color("seaShell"), width: CGFloat(2))
+            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: CGFloat(2))
             .clipShape(RoundedRectangle(cornerRadius: 4))
             Spacer().frame(width: 40)
             
@@ -89,7 +89,7 @@ struct CustomPinComponent: View {
             .frame(width: width, height: height)
             .padding(.horizontal, 11)
             .padding(.vertical, 12)
-            .border(Color("seaShell"), width: CGFloat(2))
+            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: CGFloat(2))
             .clipShape(RoundedRectangle(cornerRadius: 4))
             Spacer().frame(width: 40)
             
@@ -110,7 +110,7 @@ struct CustomPinComponent: View {
             .frame(width: width, height: height)
             .padding(.horizontal, 11)
             .padding(.vertical, 12)
-            .border(Color("seaShell"), width: CGFloat(2))
+            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: CGFloat(2))
             .clipShape(RoundedRectangle(cornerRadius: 4))
             Spacer()
         }

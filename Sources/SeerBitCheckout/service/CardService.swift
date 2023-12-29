@@ -12,7 +12,7 @@ class CardService {
     
     func initiateCardTransaction(body:CardInitiateRequestDataModel,completion: @escaping (Result<CardInitiateResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/sandbox/initiates",
+            url: "\(baseUrl)/initiates",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion
@@ -21,7 +21,7 @@ class CardService {
     
     func postCardTransactionOtp(body:CardOtpRequestDataModel,completion: @escaping (Result<CardOtpResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/sandbox/otp",
+            url: "\(baseUrl)/otp",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion
@@ -30,7 +30,7 @@ class CardService {
     
     func fetchCardBin(body:String,completion: @escaping (Result<CardBinResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/bin/"+body,
+            url: "\(baseUrl)/bin/"+body,
             method: HTTPRequestMethod.get,
             parameters: body,
             completion: completion

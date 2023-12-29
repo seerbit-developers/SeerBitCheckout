@@ -12,6 +12,7 @@ struct BankAccountBankAuthorisation: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var queryTransactionViewModel: QueryTransactionViewModel = QueryTransactionViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     var redirectUrl: String
     @State private var showPaymentMethods: Bool = false
@@ -45,7 +46,7 @@ struct BankAccountBankAuthorisation: View {
                     
                     Text("Please click the button below to authenticate with your bank")
                         .fontWeight(.regular)
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                         .font(.system(size: 15))
                     Spacer().frame(height: 20)
@@ -64,21 +65,18 @@ struct BankAccountBankAuthorisation: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (confirmingTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {})
+                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             Spacer()
             CustomFooter()
             
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
             
             if(queryTransactionResponse != nil

@@ -13,7 +13,7 @@ struct CustomButton: View {
     @State var backgroundColor: Color = Color.black
     @State var textForegroundColor:Color =  Color.white
     @State var onPress: ()-> Void
-//    @State var enabled: Bool = true
+
     
     var body: some View {
         

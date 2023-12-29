@@ -14,6 +14,7 @@ struct MomoOtp: View {
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
     @StateObject  var momoViewModel: MomoViewModel = MomoViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var otp: String = ""
     @State private var showPaymentMethods: Bool = false
@@ -50,7 +51,7 @@ struct MomoOtp: View {
                         Text("Hold on tight while we confirm this payment")
                             .fontWeight(.regular)
                             .font(.system(size: 14))
-                            .foregroundColor(Color("dark"))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                         Spacer().frame(height: 20)
                         LoadingIndicator()
@@ -60,7 +61,7 @@ struct MomoOtp: View {
                     VStack{
                         Spacer().frame(height: 5)
                         Text("Kindly enter the OTP sent to *******\(phoneNumberSubstring) and *******\(emailSubstring)")
-                            .foregroundColor(Color("dark"))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
                         Spacer().frame(height: 40)
@@ -71,7 +72,7 @@ struct MomoOtp: View {
                         //                            Spacer()
                         //                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                         //                                Text("Resend OTP")
-                        //                                    .foregroundColor(Color("dark"))
+                        //                                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         //                                    .fontWeight(.regular)
                         //                                    .font(.system(size: 13))
                         //                            })
@@ -86,21 +87,18 @@ struct MomoOtp: View {
                     }
                 }
                 Spacer().frame(height: 100)
-                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {})
+                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             
             Spacer()
             CustomFooter()
-            
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(momoViewModel.$momoOtpResponse){momoOtpResponse in
             if(momoOtpResponse != nil
                && momoOtpResponse?.data?.code == "S20"){
@@ -179,7 +177,7 @@ struct MomoOtp: View {
             if ((clientDetailsViewModel.email.count - 5) > 0) {emailOffset = clientDetailsViewModel.email.count - 5}
             
             phoneNumberSubstring = String(clientDetailsViewModel.momoMobileNumber.suffix(from: clientDetailsViewModel.mobileNumber.index(clientDetailsViewModel.mobileNumber.startIndex, offsetBy: phoneNumberOffset)
-                                                                                    ))
+                                                                                        ))
             emailSubstring = String(clientDetailsViewModel.email.suffix(from: clientDetailsViewModel.email.index(clientDetailsViewModel.email.startIndex, offsetBy: emailOffset)))
         }
         .padding(20)

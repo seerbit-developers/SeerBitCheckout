@@ -13,7 +13,7 @@ class TransferService {
     
     func initiateTransferTransaction(body:TransferInitiateRequestDataModel, completion: @escaping (Result<TransferInitiateResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/initiates",
+            url: "\(baseUrl)/initiates",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion

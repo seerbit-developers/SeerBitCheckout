@@ -22,7 +22,7 @@ class MomoService {
     
     func initiateMomoTransaction(body: MomoInitiateRequestDataModel, completion: @escaping (Result<MomoInitiateResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/initiates",
+            url: "\(baseUrl)/initiates",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion
@@ -31,7 +31,7 @@ class MomoService {
     
     func verifyMomoTransactionOtp(body: ConfirmMomoOtpRequestDataModel, completion: @escaping (Result<ConfirmMomoOtpResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/momo/otp",
+            url: "\(baseUrl)/momo/otp",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion

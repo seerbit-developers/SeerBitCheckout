@@ -13,6 +13,7 @@ struct CardOtp: View {
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var otp: String = ""
     @State private var showPaymentMethods: Bool = false
@@ -45,7 +46,7 @@ struct CardOtp: View {
                         Text("Hold on tight while we confirm this payment")
                             .fontWeight(.regular)
                             .font(.system(size: 14))
-                            .foregroundColor(Color("dark"))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                         Spacer().frame(height: 20)
                         LoadingIndicator()
@@ -55,7 +56,7 @@ struct CardOtp: View {
                     VStack{
                         Spacer().frame(height: 5)
                         Text("Kindly enter the OTP sent to *******\(phoneNumberSubstring) and *******\(emailSubstring) or enter the OTP genrated on your hardware token device")
-                            .foregroundColor(Color("dark"))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
                         Spacer().frame(height: 40)
@@ -81,20 +82,18 @@ struct CardOtp: View {
                     }
                 }
                 Spacer().frame(height: 100)
-                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {})
+                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             
             Spacer()
             CustomFooter()
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(cardViewModel.$cardOtpResponse){cardOtpResponse in
             
             if(cardOtpResponse != nil

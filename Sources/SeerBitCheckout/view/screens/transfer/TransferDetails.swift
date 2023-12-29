@@ -14,6 +14,8 @@ struct TransferDetails: View {
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
     @StateObject  var transferViewModel: TransferViewModel = TransferViewModel()
     
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
+    
     @State var fetchingDetails: Bool = false
     @State var errorFetchingDetails: Bool = false
     @State var queryingTransaction: Bool = false
@@ -38,14 +40,14 @@ struct TransferDetails: View {
     var body: some View {
         
         VStack(alignment: .center, spacing: 0){
-            CustomHeader(merchantDetails: merchantDetailsViewModel.merchantDetails!)
+            CustomHeader(merchantDetails: merchantDetailsViewModel.merchantDetails ?? nil)
             Spacer().frame(height: 20)
             ScrollView(showsIndicators: false){
                 if(queryingTransaction){
                     Text("Hold on tight while we confirm this payment")
                         .fontWeight(.regular)
                         .font(.system(size: 14))
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                     Spacer().frame(height: 20)
                 }
@@ -61,30 +63,30 @@ struct TransferDetails: View {
                             if(errorFetchingDetails){
                                 Text("An error has occured. Please try other payment methods")
                                     .fontWeight(.regular)
-                                    .foregroundColor(Color("redOrange"))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
                                     .frame(width: .infinity, alignment: .leading)
                                     .font(.system(size: 14))
                             }else {
                                 Text("Transfer exactly this amount including the decimals")
                                     .fontWeight(.regular)
                                     .font(.system(size: 14))
-                                    .foregroundColor(Color("redOrange"))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
                                     .frame(alignment: .leading)
                                 Spacer().frame(height: 20)
                                 
                                 HStack{
                                     Spacer()
-                                    Text(formatInputDouble(input: clientDetailsViewModel.totalAmount)).font(.system(size: 25, design: .rounded)).fontWeight(.bold).foregroundColor(Color("dark"))
+                                    Text(formatInputDouble(input: clientDetailsViewModel.totalAmount)).font(.system(size: 25, design: .rounded)).fontWeight(.bold).foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                                     Spacer()
                                 }
                                 .padding(8)
-                                .background(Color("seaShell"))
+                                .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
                                 .frame(width: 350)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 
                                 Text("to")
                                     .font(.system(size: 14)).fontWeight(.medium)
-                                    .foregroundColor(Color("dark"))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                                 VStack{
                                     AccountDetailsItem(
                                         key: "Account Number",
@@ -116,14 +118,14 @@ struct TransferDetails: View {
                                         toCopy: {})
                                 }
                                 .padding(10)
-                                .background(Color("seaShell"))
+                                .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
                                 .frame(width: 350)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 
                                 Text("Account number can only be used once")
                                     .fontWeight(.regular)
                                     .font(.system(size: 14))
-                                    .foregroundColor(Color("redOrange"))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
                                     .frame(alignment: .leading)
                                 
                                 Spacer().frame(height: 25)
@@ -142,23 +144,20 @@ struct TransferDetails: View {
                 }else{
                     ChangePaymentMethod(onChange: {
                         if (fetchingDetails == false && queryingTransaction == false){showPaymentMethods.toggle()}
-                    }, onCancel: {})
+                    }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
                 }
                 Spacer()
             }
             .overlay(
                 overlayView: CustomToast(toastDetails: ToastDetails(title: "Account copied"), showToast: $showToast), show: $showToast)
             CustomFooter()
-            
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onAppear{
             clientDetailsViewModel.fee = ""
             clientDetailsViewModel.fee = calculateFee(amount: clientDetailsViewModel.amount, paymentMethod: paymentMethods.transfer.rawValue, merchantDetails: merchantDetailsViewModel.merchantDetails!)
@@ -167,7 +166,7 @@ struct TransferDetails: View {
                 clientDetailsViewModel.totalAmount = String((Double(clientDetailsViewModel.amount) ?? 100.0) + (Double(clientDetailsViewModel.fee) ?? 2000.0))
             }else{clientDetailsViewModel.totalAmount = clientDetailsViewModel.amount}
             fetchingDetails = true
-
+            
             transferViewModel.initiateTransferTransaction(body: TransferInitiateRequestDataModel(fullName: clientDetailsViewModel.fullName, mobileNumber: clientDetailsViewModel.mobileNumber, email: clientDetailsViewModel.email, publicKey: clientDetailsViewModel.publicKey, amount: clientDetailsViewModel.totalAmount, currency: clientDetailsViewModel.currency, country: clientDetailsViewModel.country, paymentReference: clientDetailsViewModel.paymentReference, productID: clientDetailsViewModel.productId, productDescription: clientDetailsViewModel.productDescription, paymentType: "TRANSFER", channelType: "transfer", deviceType: clientDetailsViewModel.deviceType, sourceIP: clientDetailsViewModel.sourceIP, source: clientDetailsViewModel.source, fee: clientDetailsViewModel.fee, retry: clientDetailsViewModel.retry, amountControl: clientDetailsViewModel.amountControl, walletDaysActive: clientDetailsViewModel.walletDaysActive))
             clientDetailsViewModel.retry = true
         }

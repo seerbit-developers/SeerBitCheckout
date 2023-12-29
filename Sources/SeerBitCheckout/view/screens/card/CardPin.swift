@@ -13,6 +13,7 @@ struct CardPin: View {
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var pin: String = ""
     @State private var showPaymentMethods: Bool = false
@@ -46,30 +47,26 @@ struct CardPin: View {
                 VStack{
                     Spacer().frame(height: 5)
                     Text("Enter your 4-digit card pin to authorize this payment")
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .fontWeight(.regular)
                         .font(.system(size: 13))
                     Spacer().frame(height: 40)
                     CustomPinComponent(pin: $pin)
                 }
                 Spacer().frame(height: 100)
-                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {})
+                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             
             Spacer()
             CustomFooter()
-            NavigationLink(destination: CardOtp(),
-                           isActive: $goToCardOtp, label: {EmptyView()})
-            
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToCardOtp){CardOtp()}
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(cardViewModel.$cardInitiateResponse){ cardInitiateResponse in
             
             if(cardInitiateResponse?.data?.code == "S20"){

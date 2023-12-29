@@ -12,6 +12,7 @@ struct UssdCode: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State var ussdCode: String
     @State var transactionReference: String
@@ -39,13 +40,13 @@ struct UssdCode: View {
                         Text("Hold on tight while we confirm this payment")
                             .fontWeight(.regular)
                             .font(.system(size: 14))
-                            .foregroundColor(Color("dark"))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                         Spacer().frame(height: 20)
                     }else {
                         Text("")
                             .fontWeight(.regular)
-                            .foregroundColor(Color("dark"))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                     }
                     if (confirmingTransaction) {
@@ -60,7 +61,7 @@ struct UssdCode: View {
                             Spacer()
                         }
                         .padding(10)
-                        .background(Color("seaShell"))
+                        .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
                         .frame(width: 350)
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         
@@ -88,7 +89,7 @@ struct UssdCode: View {
                     if(confirmingTransaction){Spacer().frame(height: 50)}else{Spacer().frame(height: 120)}
                     ChangePaymentMethod(onChange: {
                         if (true){showPaymentMethods.toggle()}
-                    }, onCancel: {})
+                    }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
                 }
                 Spacer()
                 
@@ -96,16 +97,13 @@ struct UssdCode: View {
             .overlay(
                 overlayView: CustomToast(toastDetails: ToastDetails(title: "code copied"), showToast: $showToast), show: $showToast)
             CustomFooter()
-            
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
             
             if(queryTransactionResponse != nil
@@ -150,7 +148,9 @@ struct UssdCode: View {
             SuccessModal(
                 buttonAction: {
                     // close the sdk
+                    transactionStatusDataViewModel.transactionStatusData = queryTransactionViewModel.queryTransactionResponse
                     showSuccesDialog.toggle()
+                    transactionStatusDataViewModel.startSeerbitCheckout = true
                 }
             )
             .interactiveDismissDisabled(true)

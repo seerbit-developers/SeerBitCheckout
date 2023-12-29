@@ -15,7 +15,8 @@ struct CustomFooter: View {
                 .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                 .fontWeight(.regular)
                 .font(.system(size: 15))
-            Text("SeerBit").font(.custom("Android 101", size: 15)).bold()
+//            Text("SeerBit").font(.custom("Android 101", size: 15)).bold()
+            Text("SeerBit").font(Font.custom("Android 101", size: 20))
         }
     }
 }

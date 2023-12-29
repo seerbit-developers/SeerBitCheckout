@@ -12,22 +12,22 @@ struct SuccessModal: View {
     let description: String = "Transaction is completed successfully"
     let buttonText: String  = "Close"
     let buttonAction: ()-> Void
-
+    
     
     var body: some View {
         VStack{
             Text(title)
-                .foregroundColor(Color("dusk"))
+                .foregroundColor(Color(uiColor: UIColor(named: "dusk", in: .module, compatibleWith: nil)!))
                 .fontWeight(.heavy)
                 .font(.system(size: 18))
             Spacer().frame(height: 30)
-            Image("sdk_success2")
+            Image(uiImage: UIImage(named: "sdk_success2", in: .module, with: nil)!)
                 .frame(width: 60, height: 60)
                 .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
                 .aspectRatio(0.75, contentMode: .fit)
             Spacer().frame(height: 10)
             Text(description)
-                .foregroundColor(Color("dusk"))
+                .foregroundColor(Color(uiColor: UIColor(named: "dusk", in: .module, compatibleWith: nil)!))
                 .fontWeight(.light)
                 .font(.system(size: 14))
             Spacer().frame(height: 40)

@@ -12,7 +12,7 @@ struct BankAccountInitiate: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var bankAccountViewModel: BankAccountViewModel = BankAccountViewModel()
-    
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var showPaymentMethods: Bool = false
     @State private var initiatingBankTransaction: Bool = false
@@ -52,7 +52,7 @@ struct BankAccountInitiate: View {
                     
                     Text("Choose your bank to start this payment")
                         .fontWeight(.regular)
-                        .foregroundColor(Color("dark"))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                         .font(.system(size: 15))
                     Spacer().frame(height: 20)
@@ -68,15 +68,15 @@ struct BankAccountInitiate: View {
                             }, label: {
                                 HStack{
                                     Text(chosenBankName)
-                                        .foregroundColor(Color("starDust"))
+                                        .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                         .fontWeight(.bold)
                                         .font(.system(size: 14))
                                     Spacer()
-                                    Image(systemName: "chevron.down").foregroundColor(Color("starDust"))
+                                    Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                 }
                                 .padding(11)
                                 .frame(width: .infinity)
-                                .border(Color("seaShell"), width: 2)
+                                .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                             })
                         }
@@ -107,7 +107,7 @@ struct BankAccountInitiate: View {
                                                     VStack{
                                                         Divider()
                                                             .frame(height: 0.3)
-                                                            .overlay(Color("starDust"))
+                                                            .overlay(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                                     }
                                                 }
                                             })
@@ -119,12 +119,12 @@ struct BankAccountInitiate: View {
                                 }
                                 .frame(alignment: .leading)
                                 .padding(.horizontal)
-                                .background(Color("porcelain"))
+                                .background(Color(uiColor: UIColor(named: "porcelain", in: .module, compatibleWith: nil)!))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
                             .frame(height: 170, alignment: .leading)
                             .padding(0)
-                            .border(Color("seaShell"), width: 2)
+                            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                     }
@@ -144,27 +144,20 @@ struct BankAccountInitiate: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (initiatingBankTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {})
+                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
             }
             Spacer()
                 .overlay(
                     overlayView: CustomToast(toastDetails: ToastDetails(title: "Please select bank"), showToast: $showToast), show: $showToast)
             CustomFooter()
-            
-            NavigationLink(destination: BankAccountBankAuthorisation(redirectUrl: bankAccountViewModel.bankAccountInitiateResponse?.data?.payments?.redirectURL ?? ""),
-                           isActive: $goToRedirect, label: {EmptyView()})
-            
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            
-            NavigationLink(destination: SelectUssdBank(),
-                           isActive: $goToUssd, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
         }
-
+        .navigationDestination(isPresented: $goToRedirect){BankAccountBankAuthorisation(redirectUrl: bankAccountViewModel.bankAccountInitiateResponse?.data?.payments?.redirectURL ?? "")}
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(bankAccountViewModel.$merchantBanks){ banksList in
             if(banksList?.status == "SUCCESS" && banksList?.data?.code == "00"){ merchantBanks = banksList?.data?.merchantBanks}
         }

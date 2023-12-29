@@ -11,6 +11,7 @@ struct SelectUssdBank: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var ussdViewModel: UssdViewModel = UssdViewModel()
+    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     var listOfBanks =  ussdBanks
     @State var showUssdBanks = false
@@ -43,13 +44,13 @@ struct SelectUssdBank: View {
                         if fetchingUssdCode{
                             Text("")
                                 .fontWeight(.regular)
-                                .foregroundColor(Color("dark"))
+                                .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                                 .frame(alignment: .leading)
                             Spacer().frame(height: 20)
                         }else {
                             Text("Choose your bank to start this payment")
                                 .fontWeight(.regular)
-                                .foregroundColor(Color("dark"))
+                                .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                                 .frame(alignment: .leading)
                                 .font(.system(size: 15))
                             Spacer().frame(height: 20)
@@ -61,15 +62,15 @@ struct SelectUssdBank: View {
                                 }, label: {
                                     HStack{
                                         Text(chosenBankName)
-                                            .foregroundColor(Color("starDust"))
+                                            .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                             .fontWeight(.bold)
                                             .font(.system(size: 14))
                                         Spacer()
-                                        Image(systemName: "chevron.down").foregroundColor(Color("starDust"))
+                                        Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                     }
                                     .padding(11)
                                     .frame(width: .infinity)
-                                    .border(Color("seaShell"), width: 2)
+                                    .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                                     .clipShape(RoundedRectangle(cornerRadius: 4))
                                 })
                             }
@@ -108,7 +109,7 @@ struct SelectUssdBank: View {
                                                     VStack{
                                                         Divider()
                                                             .frame(height: 0.3)
-                                                            .overlay(Color("starDust"))
+                                                            .overlay(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
                                                     }
                                                 }
                                             })
@@ -120,12 +121,12 @@ struct SelectUssdBank: View {
                                 }
                                 .frame(alignment: .leading)
                                 .padding(.horizontal)
-                                .background(Color("porcelain"))
+                                .background(Color(uiColor: UIColor(named: "porcelain", in: .module, compatibleWith: nil)!))
                                 .clipShape(RoundedRectangle(cornerRadius: 10))
                             }
                             .frame(height: 250, alignment: .leading)
                             .padding(0)
-                            .border(Color("seaShell"), width: 2)
+                            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                     }
@@ -135,23 +136,19 @@ struct SelectUssdBank: View {
                     if(fetchingUssdCode){Spacer().frame(height: 50)}else{Spacer().frame(height: 120)}
                     ChangePaymentMethod(onChange: {
                         if (fetchingUssdCode == false){showPaymentMethods.toggle()}
-                    }, onCancel: {})
+                    }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
                 }
                 Spacer()
             }
             CustomFooter()
-            NavigationLink(destination: UssdCode(ussdCode: ussdCode, transactionReference: ussdViewModel.ussdInitiateResponse?.data?.payments?.paymentReference ?? ""),
-                           isActive: $goToUssdCode, label: {EmptyView()})
-            
-            NavigationLink(destination: CardInitiate(),
-                           isActive: $goToCard, label: {EmptyView()})
-            NavigationLink(destination: TransferDetails(transactionReference: clientDetailsViewModel.paymentReference),
-                           isActive: $goToTransfer, label: {EmptyView()})
-            NavigationLink(destination: MomoInitiate(),
-                           isActive: $goToMomo, label: {EmptyView()})
-            NavigationLink(destination: BankAccountInitiate(),
-                           isActive: $goToBankAccount, label: {EmptyView()})
         }
+        .navigationDestination(isPresented: $goToUssdCode){UssdCode(ussdCode: ussdCode, transactionReference: ussdViewModel.ussdInitiateResponse?.data?.payments?.paymentReference ?? "")}
+        .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
+        .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
+        .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
+        .navigationDestination(isPresented: $goToCard){CardInitiate()}
+        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
         .onReceive(ussdViewModel.$ussdInitiateResponse){ussdInitiateResponse in
             if (ussdInitiateResponse?.data?.code) == "S20"{
                 fetchingUssdCode = false

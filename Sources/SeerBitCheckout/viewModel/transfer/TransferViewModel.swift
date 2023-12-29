@@ -19,7 +19,7 @@ class TransferViewModel: ObservableObject {
      }
     
     func initiateTransferTransaction (body:TransferInitiateRequestDataModel){
-        print(body.paymentReference, "lpoi ref transfer")
+
         transferService.initiateTransferTransaction(body: body){ result in
             print(result, "transfer res")
             DispatchQueue.main.async {

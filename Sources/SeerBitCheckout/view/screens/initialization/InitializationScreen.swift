@@ -62,11 +62,6 @@ struct InitializationScreen: View {
                 Text("Initialization failed. A network error occured. Please try again")
                     .padding(30)
             }
-//            NavigationLink(destination: CardInitiate(),
-//                           isActive: $sdkReady, label: {EmptyView()})
-//            .environmentObject(merchantDetailsViewModel)
-//            .environmentObject(clientDetailsViewModel)
-//            .navigationBarBackButtonHidden(true)
         }
         .onReceive(merchantDetailsViewModel.$merchantDetails){merchantDetails in
             if(merchantDetails?.responseCode  == "00" ){

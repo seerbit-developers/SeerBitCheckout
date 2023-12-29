@@ -30,7 +30,7 @@ class ClientDetailsViewModel: ObservableObject {
     @Published var rememberMe = false
     @Published var productId = ""
     @Published var source = "seerbit_checkout"
-    @Published var redirectURL = "winnersmobileapp://"
+    @Published var redirectURL = "seerbit_ios_checkout://"
     @Published var productDescription = "seerbit payment"
     @Published var deviceType = "iPhone"
     @Published var sourceIP = "102.88.63.64"
@@ -46,5 +46,4 @@ class ClientDetailsViewModel: ObservableObject {
     @Published var scheduleId = ""
     @Published var accountName = ""
     @Published var bankCode = ""
-    
 }

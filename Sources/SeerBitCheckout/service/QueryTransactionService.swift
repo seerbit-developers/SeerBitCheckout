@@ -13,7 +13,7 @@ class QueryTransactionService {
     
     func queryTransaction(reference: String,completion: @escaping (Result<QueryTransactionDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/query/"+reference,
+            url: "\(baseUrl)/query/"+reference,
             method: HTTPRequestMethod.get,
             parameters: "nil",
             completion: completion

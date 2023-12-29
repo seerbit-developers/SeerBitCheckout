@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct QueryTransactionDataModel: Codable {
+public struct QueryTransactionDataModel: Codable {
     let status: String?
     let message: String?
     let  error: String?
     let data: QueryData?
 }
 
-struct QueryData: Codable {
+public struct QueryData: Codable {
     let code: String?
     let message: String?
 }

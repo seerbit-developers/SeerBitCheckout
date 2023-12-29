@@ -9,7 +9,7 @@ import SwiftUI
 import SDWebImageSwiftUI
 
 struct CustomHeader: View {
-    var merchantDetails : MerchantDetailsDataModel
+    var merchantDetails : MerchantDetailsDataModel?  = nil
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
@@ -20,7 +20,7 @@ struct CustomHeader: View {
         VStack(alignment: HorizontalAlignment.leading ){
             Spacer().frame(height: 20)
             HStack(alignment: VerticalAlignment.center){
-                if merchantDetails.payload?.logo  == nil {
+                if merchantDetails?.payload?.logo  == nil {
                     Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
                         .resizable()
                         .frame(width: 50, height: 50)
@@ -28,13 +28,13 @@ struct CustomHeader: View {
                         .clipShape(RoundedRectangle(cornerRadius: 2))
                 }else{
                     if #available(iOS 15.0, *){
-                        AsyncImage(url: URL(string: merchantDetails.payload?.logo  ?? ""))
+                        AsyncImage(url: URL(string: merchantDetails?.payload?.logo  ?? ""))
                         { image in image.resizable() } placeholder: { Color(uiColor: UIColor(named: "porcelain", in: .module, compatibleWith: nil)!) }
                             .clipShape(RoundedRectangle(cornerRadius: 2))
                             .frame(width: 50, height: 50)
                             .aspectRatio(contentMode: .fit)
                     }else{
-                        WebImage(url: URL(string:merchantDetails.payload?.logo ?? ""))
+                        WebImage(url: URL(string:merchantDetails?.payload?.logo ?? ""))
                             .frame(width: 50, height: 50)
                             .clipShape(RoundedRectangle(cornerRadius: 2))
                     }

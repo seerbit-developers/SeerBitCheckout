@@ -13,7 +13,7 @@ class BankAccountService {
     
     func fetchMerchantBanks(completion: @escaping (Result<GetBanksResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/banks",
+            url: "\(baseUrl)/banks",
             method: HTTPRequestMethod.get,
             parameters: "nil",
             completion: completion
@@ -22,7 +22,7 @@ class BankAccountService {
     
     internal  func initiateBankAccountTransaction(body: BankAccountInitiateRequestDataModel, completion: @escaping (Result<BankAccountInitiateResponseDataModel, Error>) -> Void) {
         apiClient.makeAPIRequest(
-            url: "https://seerbitapi.com/checkout/initiates",
+            url: "\(baseUrl)/initiates",
             method: HTTPRequestMethod.post,
             parameters: body,
             completion: completion
