@@ -12,7 +12,6 @@ struct BankAccountInitiate: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var bankAccountViewModel: BankAccountViewModel = BankAccountViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var showPaymentMethods: Bool = false
     @State private var initiatingBankTransaction: Bool = false
@@ -31,7 +30,7 @@ struct BankAccountInitiate: View {
     @State var showBanks: Bool = false
     @State var chosenBankName: String = "Select bank"
     @State var chosenBank: MerchantBank? = nil
-    
+    @State var closeSdk: Bool = false
     
     
     var body: some View {
@@ -144,7 +143,7 @@ struct BankAccountInitiate: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (initiatingBankTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                }, onCancel: {closeSdk = true})
             }
             Spacer()
                 .overlay(
@@ -156,7 +155,7 @@ struct BankAccountInitiate: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(bankAccountViewModel.$merchantBanks){ banksList in
             if(banksList?.status == "SUCCESS" && banksList?.data?.code == "00"){ merchantBanks = banksList?.data?.merchantBanks}
@@ -169,7 +168,6 @@ struct BankAccountInitiate: View {
                 goToRedirect = true
             }else if (bankAccountInitiateResponse != nil){
                 initiatingBankTransaction = false
-                print(bankAccountInitiateResponse as Any)
                 errorDescription =  "An error has occured. Please use another payment method or choose another bank."
                 showErrorDialog = true
             }

@@ -10,8 +10,7 @@ import SwiftData
 
 @available(iOS 16.0, *)
 public struct InitSeerbitCheckout: View {
-    
-    @EnvironmentObject  var transactionStatusDataViewModel: TransactionStatusDataViewModel
+    @StateObject private var transactionStatusDataViewModel = TransactionStatusDataViewModel()
     @StateObject private var merchantDetailsViewModel = MerchantDetailsViewModel()
     @StateObject private var clientDetailsViewModel = ClientDetailsViewModel()
     
@@ -21,6 +20,7 @@ public struct InitSeerbitCheckout: View {
     var mobileNumber: String
     var publicKey: String
     var email: String
+    var transactionStatusData: QueryTransactionDataModel? = nil
     var paymentReference: String = ""
     var productId: String = ""
     var productDescription: String = ""
@@ -32,13 +32,38 @@ public struct InitSeerbitCheckout: View {
     @State var sdkReady: Bool = false
     
     
-    public init (amount:Double, fullName:String, mobileNumber:String, publicKey:String, email:String){
+    public init (
+        amount:Double,
+        fullName:String,
+        mobileNumber:String,
+        publicKey:String,
+        email:String,
+        transactionStatusData: QueryTransactionDataModel? = nil
+    ){
         
         self.amount = amount
         self.fullName = fullName
         self.mobileNumber = mobileNumber
         self.publicKey = publicKey
         self.email = email
+        self.transactionStatusData = transactionStatusData
+        
+    }
+    
+    
+    // Function to notify observers
+   private func onCloseCheckout() {
+        
+        let data = transactionStatusData
+        
+        // Convert to Data
+        if let jsonData = try? JSONEncoder().encode(data) {
+            NotificationCenter.default.post(
+                name: .closeCheckout,
+                object: nil,
+                userInfo: ["jsonData": jsonData]
+            )
+        }else{NotificationCenter.default.post(name: .closeCheckout, object: nil)}
     }
     
     
@@ -54,6 +79,7 @@ public struct InitSeerbitCheckout: View {
                             NavigationStack{CardInitiate()}
                                 .environmentObject(merchantDetailsViewModel)
                                 .environmentObject(clientDetailsViewModel)
+                                .environmentObject(transactionStatusDataViewModel)
                                 .navigationBarBackButtonHidden(true)
                         }else {
                             Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
@@ -97,24 +123,21 @@ public struct InitSeerbitCheckout: View {
                         sdkReady = true
                     }
                 }
-                .onAppear{
-                    clientDetailsViewModel.amount = String(amount)
-                    clientDetailsViewModel.fullName = fullName
-                    clientDetailsViewModel.mobileNumber = mobileNumber
-                    clientDetailsViewModel.publicKey = publicKey
-                    clientDetailsViewModel.email = email
-                    merchantDetailsViewModel.fetchMerchantDetailsData(publicKey: clientDetailsViewModel.publicKey)
-                }
-                
             }else{EmptyView()}
-            
         }
         .onAppear{
-            if(amount > 0){checksComplete = true}
-            else if(amount < 0 && fullName == "backhome"){
+            if(amount > 0){
                 checksComplete = true
-                print("the trick")
-                transactionStatusDataViewModel.startSeerbitCheckout = false
+                clientDetailsViewModel.amount = String(amount)
+                clientDetailsViewModel.fullName = fullName
+                clientDetailsViewModel.mobileNumber = mobileNumber
+                clientDetailsViewModel.publicKey = publicKey
+                clientDetailsViewModel.email = email
+                merchantDetailsViewModel.fetchMerchantDetailsData(publicKey: clientDetailsViewModel.publicKey)
+            }
+            else if(amount < 0 && fullName == "backhome"){
+                onCloseCheckout()
+                checksComplete = true
             }else{
                 errorMessage = "Amount cannot be a negative value"
                 checksComplete = false
@@ -128,7 +151,7 @@ public struct InitSeerbitCheckout: View {
                 buttonRightAction: {},
                 singleButtonAction: {
                     showErrorDialog.toggle()
-                    transactionStatusDataViewModel.startSeerbitCheckout = false
+                    onCloseCheckout()
                 })
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
@@ -138,3 +161,8 @@ public struct InitSeerbitCheckout: View {
 }
 //SBTESTPUBK_t4G16GCA1O51AV0Va3PPretaisXubSw1
 //SBPUBK_WWEQK6UVR1PNZEVVUOBNIQHEIEIM1HJC
+
+// Define a notification name
+extension Notification.Name {
+    static let closeCheckout = Notification.Name("closeCheckout")
+}

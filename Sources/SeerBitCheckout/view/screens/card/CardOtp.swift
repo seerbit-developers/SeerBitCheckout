@@ -11,15 +11,14 @@ struct CardOtp: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
+    @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var otp: String = ""
     @State private var showPaymentMethods: Bool = false
     @State var verifyingOtp: Bool  = false
     
-    @State var showSuccesDialog: Bool = false
     @State var showErrorDialog: Bool  =  false
     @State var errorMessage: String = ""
     
@@ -30,7 +29,8 @@ struct CardOtp: View {
     @State var goToTransfer: Bool = false
     @State var goToMomo: Bool = false
     @State var goToBankAccount: Bool = false
-    
+    @State var goToSuccessScreen: Bool = false
+    @State var closeSdk: Bool = false
     
     var body: some View {
         
@@ -82,7 +82,7 @@ struct CardOtp: View {
                     }
                 }
                 Spacer().frame(height: 100)
-                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {closeSdk = true})
             }
             
             Spacer()
@@ -92,7 +92,8 @@ struct CardOtp: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $goToSuccessScreen){SuccessScreen()}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(cardViewModel.$cardOtpResponse){cardOtpResponse in
             
@@ -100,19 +101,30 @@ struct CardOtp: View {
                && cardOtpResponse?.data?.code == "00"){
                 
                 // transaction confirmed
-                showSuccesDialog = true
+                transactionStatusDataViewModel.transactionStatusData = QueryTransactionDataModel(
+                    status: cardOtpResponse?.status,
+                    message: cardOtpResponse?.data?.message,
+                    error: nil,
+                    data: QueryData(
+                        code: cardOtpResponse?.data?.code,
+                        message: cardOtpResponse?.data?.message,
+                        payments: QueryDataPayments(redirectLink: nil, amount: nil, fee: nil, mobilenumber: nil, publicKey: nil, paymentType: nil, productID: nil, productDescription: nil, gatewayMessage: nil, gatewayCode: nil, gatewayref: nil, businessName: nil, mode: nil, redirecturl: nil, channelType: nil, sourceIP: nil, country: nil, currency: nil, paymentReference: cardOtpResponse?.data?.payments?.reference, bankCode: nil, reason: nil, transactionProcessedTime: nil),
+                        customers: nil
+                    ))
+                
                 verifyingOtp = false
+                goToSuccessScreen = true
                 
             }else if (cardOtpResponse != nil){
                 verifyingOtp = false
-                errorMessage = cardOtpResponse?.data?.message ?? "An error occured. Please try again1"
+                errorMessage = cardOtpResponse?.data?.message ?? "An error occured. Please try again"
                 showErrorDialog = true
             }
         }
         .onReceive(cardViewModel.$cardOtpResponseError){cardOtpResponseError in
             if(cardOtpResponseError != nil){
                 verifyingOtp = false
-                errorMessage = cardViewModel.cardOtpResponseError?.localizedDescription ?? "An error occured. Please try again2"
+                errorMessage = cardViewModel.cardOtpResponseError?.localizedDescription ?? "An error occured. Try again please"
                 showErrorDialog = true
             }
         }
@@ -122,16 +134,6 @@ struct CardOtp: View {
                 buttonLeftAction: {},
                 buttonRightAction: {},
                 singleButtonAction: {showErrorDialog.toggle()})
-            .interactiveDismissDisabled(true)
-            .presentationDetents([.fraction(0.4)])
-        }
-        .sheet(isPresented: $showSuccesDialog){
-            SuccessModal(
-                buttonAction: {
-                    // close the sdk
-                    showSuccesDialog.toggle()
-                }
-            )
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
         }

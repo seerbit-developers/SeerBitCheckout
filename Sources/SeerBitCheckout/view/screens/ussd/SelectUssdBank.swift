@@ -11,7 +11,6 @@ struct SelectUssdBank: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var ussdViewModel: UssdViewModel = UssdViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     var listOfBanks =  ussdBanks
     @State var showUssdBanks = false
@@ -29,7 +28,7 @@ struct SelectUssdBank: View {
     @State var goToTransfer: Bool = false
     @State var goToMomo: Bool = false
     @State var goToBankAccount: Bool = false
-    
+    @State var closeSdk: Bool = false
     
     var body: some View {
         
@@ -136,7 +135,7 @@ struct SelectUssdBank: View {
                     if(fetchingUssdCode){Spacer().frame(height: 50)}else{Spacer().frame(height: 120)}
                     ChangePaymentMethod(onChange: {
                         if (fetchingUssdCode == false){showPaymentMethods.toggle()}
-                    }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                    }, onCancel: {closeSdk = true})
                 }
                 Spacer()
             }
@@ -147,7 +146,7 @@ struct SelectUssdBank: View {
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
         .navigationDestination(isPresented: $goToCard){CardInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(ussdViewModel.$ussdInitiateResponse){ussdInitiateResponse in
             if (ussdInitiateResponse?.data?.code) == "S20"{

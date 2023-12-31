@@ -11,13 +11,12 @@ struct UssdCode: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
+    @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State var ussdCode: String
     @State var transactionReference: String
     @State var queryErrorMessage: String = ""
-    @State var showSuccesDialog: Bool = false
     @State var showErrorDialog: Bool  =  false
     @State var confirmingTransaction: Bool  = false
     @State private var showToast: Bool = false
@@ -27,6 +26,8 @@ struct UssdCode: View {
     @State var goToTransfer: Bool = false
     @State var goToMomo: Bool = false
     @State var goToBankAccount: Bool = false
+    @State var goToSuccessScreen: Bool = false
+    @State var closeSdk: Bool = false
     
     
     var body: some View {
@@ -76,9 +77,8 @@ struct UssdCode: View {
                         
                         Spacer().frame(height: 15)
                         CustomButton(buttonLabel: "Confirm Payment"){
-                            print("confirm payment")
                             confirmingTransaction = true
-                            queryTransactionViewModel.queryTransaction(reference:transactionReference)
+                            queryTransactionViewModel.queryTransaction(reference: transactionReference)
                         }
                         Spacer().frame(height: 15)
                     }
@@ -89,20 +89,21 @@ struct UssdCode: View {
                     if(confirmingTransaction){Spacer().frame(height: 50)}else{Spacer().frame(height: 120)}
                     ChangePaymentMethod(onChange: {
                         if (true){showPaymentMethods.toggle()}
-                    }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                    }, onCancel: {closeSdk = true})
                 }
                 Spacer()
-                
             }
             .overlay(
                 overlayView: CustomToast(toastDetails: ToastDetails(title: "code copied"), showToast: $showToast), show: $showToast)
             CustomFooter()
+            
         }
         .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
         .navigationDestination(isPresented: $goToCard){CardInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $goToSuccessScreen){SuccessScreen()}
         
         .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
             
@@ -110,9 +111,9 @@ struct UssdCode: View {
                && queryTransactionResponse?.data?.code == "00"){
                 
                 // transaction confirmed
-                showSuccesDialog = true
+                transactionStatusDataViewModel.transactionStatusData = queryTransactionResponse
                 confirmingTransaction = false
-                
+                goToSuccessScreen = true
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code == "S20"){
                 queryTransactionViewModel.queryTransaction(
@@ -143,18 +144,7 @@ struct UssdCode: View {
                 singleButtonAction: {showErrorDialog.toggle()})
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
-        }
-        .sheet(isPresented: $showSuccesDialog){
-            SuccessModal(
-                buttonAction: {
-                    // close the sdk
-                    transactionStatusDataViewModel.transactionStatusData = queryTransactionViewModel.queryTransactionResponse
-                    showSuccesDialog.toggle()
-                    transactionStatusDataViewModel.startSeerbitCheckout = true
-                }
-            )
-            .interactiveDismissDisabled(true)
-            .presentationDetents([.fraction(0.4)])
+            
         }
         .padding(.horizontal,20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)

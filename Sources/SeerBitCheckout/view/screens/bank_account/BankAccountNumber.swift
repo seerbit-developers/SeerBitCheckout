@@ -11,8 +11,6 @@ struct BankAccountNumber: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
-    
     
     @State private var showPaymentMethods: Bool = false
     @State private var authorisingWithBank: Bool = false
@@ -36,7 +34,7 @@ struct BankAccountNumber: View {
     @State var showBvnInput: Bool = false
     @State var showDobInput: Bool = true
     @State var showDobInputSheet: Bool = false
-    
+    @State var closeSdk: Bool = false
     
     var body: some View {
         
@@ -102,7 +100,7 @@ struct BankAccountNumber: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (authorisingWithBank == false){showPaymentMethods.toggle()}
-                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                }, onCancel: {closeSdk = true})
             }
             Spacer()
             CustomFooter()
@@ -111,7 +109,7 @@ struct BankAccountNumber: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(

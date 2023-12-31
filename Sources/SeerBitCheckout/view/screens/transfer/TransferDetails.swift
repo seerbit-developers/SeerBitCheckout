@@ -11,10 +11,10 @@ struct TransferDetails: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
+    @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
     @StateObject  var transferViewModel: TransferViewModel = TransferViewModel()
     
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State var fetchingDetails: Bool = false
     @State var errorFetchingDetails: Bool = false
@@ -35,6 +35,8 @@ struct TransferDetails: View {
     @State var goToMomo: Bool = false
     @State var goToUssd: Bool = false
     @State var goToBankAccount: Bool = false
+    @State var closeSdk: Bool = false
+    @State var goToSuccessScreen: Bool = false
     
     
     var body: some View {
@@ -144,7 +146,7 @@ struct TransferDetails: View {
                 }else{
                     ChangePaymentMethod(onChange: {
                         if (fetchingDetails == false && queryingTransaction == false){showPaymentMethods.toggle()}
-                    }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                    }, onCancel: {closeSdk = true})
                 }
                 Spacer()
             }
@@ -156,7 +158,8 @@ struct TransferDetails: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
         .navigationDestination(isPresented: $goToCard){CardInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $goToSuccessScreen){SuccessScreen()}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onAppear{
             clientDetailsViewModel.fee = ""
@@ -201,8 +204,9 @@ struct TransferDetails: View {
                && queryTransactionResponse?.data?.code == "00"){
                 
                 // transaction confirmed
-                showSuccesDialog = true
+                transactionStatusDataViewModel.transactionStatusData = queryTransactionResponse
                 queryingTransaction.toggle()
+                goToSuccessScreen = true
                 
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code == "S20"){
@@ -232,16 +236,6 @@ struct TransferDetails: View {
                 buttonLeftAction: {},
                 buttonRightAction: {},
                 singleButtonAction: {showErrorDialog.toggle()})
-            .interactiveDismissDisabled(true)
-            .presentationDetents([.fraction(0.4)])
-        }
-        .sheet(isPresented: $showSuccesDialog){
-            SuccessModal(
-                buttonAction: {
-                    // close the sdk
-                    showSuccesDialog.toggle()
-                }
-            )
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
         }

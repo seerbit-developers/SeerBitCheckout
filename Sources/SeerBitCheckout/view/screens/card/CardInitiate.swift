@@ -12,7 +12,6 @@ struct CardInitiate: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
-    @StateObject  var transactionStatusDataViewModel: TransactionStatusDataViewModel = TransactionStatusDataViewModel()
     
     @State private var cardNumber: String = ""
     @State private var expiryDate: String = ""
@@ -27,6 +26,7 @@ struct CardInitiate: View {
     @State var errorDescription: String = "An error has occured"
     @State var goToRedirect: Bool = false
     @State var goToCardPin: Bool = false
+    @State var goToCardOtp: Bool = false
     @State var cardIcon: String = ""
     
     @State var goToUssd: Bool = false
@@ -34,7 +34,7 @@ struct CardInitiate: View {
     @State var goToMomo: Bool = false
     @State var goToBankAccount: Bool = false
     @State var startSeerbitCheckout: Bool? = nil
-    
+    @State var closeSdk: Bool = false
     
     var body: some View {
         
@@ -90,17 +90,23 @@ struct CardInitiate: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (initiatingCardTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                }, onCancel: {closeSdk = true})
             }
             Spacer()
             CustomFooter()
         }
         .navigationDestination(isPresented: $goToRedirect){CardBankAuthentication(redirectUrl: cardViewModel.cardInitiateResponse?.data?.payments?.redirectURL ?? "")}
+        
         .navigationDestination(isPresented: $goToBankAccount){BankAccountInitiate()}
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
+        
+        .navigationDestination(isPresented: $goToCardOtp){CardOtp()}
+        .navigationDestination(isPresented: $goToCardPin){CardPin()}
+        
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(cardViewModel.$cardInitiateResponse){ cardInitiateResponse in
             
@@ -110,9 +116,15 @@ struct CardInitiate: View {
                 if(((cardInitiateResponse?.data?.payments?.redirectURL?.isEmpty) == false)){
                     // redirect to browser
                     goToRedirect = true
-                }else if(cardInitiateResponse?.data?.message == "Kindly enter your PIN"){
+                }else if(cardInitiateResponse?.data?.message?.uppercased().contains("PIN") == true){
                     //navigate to pin screen
+                    clientDetailsViewModel.linkingreference = cardInitiateResponse?.data?.payments?.linkingReference ?? ""
                     goToCardPin = true
+                }
+                else if(cardInitiateResponse?.data?.message?.uppercased().contains("OTP") == true){
+                    //navigate to otp screen
+                    clientDetailsViewModel.linkingreference = cardInitiateResponse?.data?.payments?.linkingReference ?? ""
+                    goToCardOtp = true
                 }
             }else if(cardInitiateResponse != nil){
                 initiatingCardTransaction = false

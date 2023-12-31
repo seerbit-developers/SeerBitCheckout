@@ -11,9 +11,9 @@ struct MomoInitiate: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
+    @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @StateObject  var momoViewModel: MomoViewModel = MomoViewModel()
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     @State private var mobileNumber: String = ""
     @State private var providerAvailable: Bool = false
@@ -35,6 +35,8 @@ struct MomoInitiate: View {
     @State var goToTransfer: Bool = false
     @State var goToUssd: Bool = false
     @State var goToBankAccount: Bool = false
+    @State var closeSdk: Bool = false
+    @State var goToSuccessScreen: Bool = false
     
     var body: some View {
         
@@ -152,7 +154,7 @@ struct MomoInitiate: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (initiatingMomoTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                }, onCancel: {closeSdk = true})
             }
             Spacer()
             CustomFooter()
@@ -162,7 +164,8 @@ struct MomoInitiate: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToCard){CardInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $goToSuccessScreen){SuccessScreen()}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(momoViewModel.$momoProvidersResponse){momoProvidersResponse in
             
@@ -212,8 +215,9 @@ struct MomoInitiate: View {
                && queryTransactionResponse?.data?.code == "00"){
                 
                 // transaction confirmed
-                showSuccesDialog = true
+                transactionStatusDataViewModel.transactionStatusData = queryTransactionResponse
                 confirmingTransaction = false
+                goToSuccessScreen = true
                 
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code == "S20"){
@@ -242,16 +246,6 @@ struct MomoInitiate: View {
                 buttonLeftAction: {},
                 buttonRightAction: {},
                 singleButtonAction: {showErrorDialog.toggle()})
-            .interactiveDismissDisabled(true)
-            .presentationDetents([.fraction(0.4)])
-        }
-        .sheet(isPresented: $showSuccesDialog){
-            SuccessModal(
-                buttonAction: {
-                    // close the sdk
-                    showSuccesDialog.toggle()
-                }
-            )
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
         }

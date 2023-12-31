@@ -13,6 +13,5 @@ public class TransactionStatusDataViewModel: ObservableObject {
     public init(){}
     
     @Published public var transactionStatusData : QueryTransactionDataModel? = nil
-    @Published public var startSeerbitCheckout: Bool = false
     
 }

@@ -11,22 +11,21 @@ struct BankAccountBankAuthorisation: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
+    @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @StateObject  var queryTransactionViewModel: QueryTransactionViewModel = QueryTransactionViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     var redirectUrl: String
     @State private var showPaymentMethods: Bool = false
     
     @State var showErrorDialog: Bool  =  false
     @State var errorDescription: String = "An error has occured"
-    @State var showSuccesDialog: Bool = false
     @State var confirmingTransaction: Bool  = false
     @State var goToUssd: Bool = false
     @State var goToTransfer: Bool = false
     @State var goToMomo: Bool = false
     @State var goToCard: Bool = false
-    
-    
+    @State var goToSuccessScreen: Bool = false
+    @State var closeSdk: Bool = false
     
     var body: some View {
         
@@ -65,7 +64,7 @@ struct BankAccountBankAuthorisation: View {
             if(showPaymentMethods == false){
                 ChangePaymentMethod(onChange: {
                     if (confirmingTransaction == false){showPaymentMethods.toggle()}
-                }, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                }, onCancel: {closeSdk = true})
             }
             Spacer()
             CustomFooter()
@@ -75,7 +74,8 @@ struct BankAccountBankAuthorisation: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $goToSuccessScreen){SuccessScreen()}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
             
@@ -83,8 +83,9 @@ struct BankAccountBankAuthorisation: View {
                && queryTransactionResponse?.data?.code == "00"){
                 
                 // transaction confirmed
-                showSuccesDialog = true
+                transactionStatusDataViewModel.transactionStatusData = queryTransactionResponse
                 confirmingTransaction = false
+                goToSuccessScreen = true
                 
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code == "S20"){
@@ -113,16 +114,6 @@ struct BankAccountBankAuthorisation: View {
                 buttonLeftAction: {},
                 buttonRightAction: {},
                 singleButtonAction: {showErrorDialog.toggle()})
-            .interactiveDismissDisabled(true)
-            .presentationDetents([.fraction(0.4)])
-        }
-        .sheet(isPresented: $showSuccesDialog){
-            SuccessModal(
-                buttonAction: {
-                    // close the sdk
-                    showSuccesDialog.toggle()
-                }
-            )
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
         }

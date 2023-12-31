@@ -13,7 +13,7 @@ class MerchantDetailsViewModel: ObservableObject {
     @Published var merchantDetails : MerchantDetailsDataModel?
     @Published var merchantDetailsError : Error? = nil
     
-   private  let merchantDetailsService: MerchantDetailsService
+    private  let merchantDetailsService: MerchantDetailsService
     
     init(merchantDetailsService:MerchantDetailsService = MerchantDetailsService()){
         self.merchantDetailsService = merchantDetailsService
@@ -29,10 +29,8 @@ class MerchantDetailsViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.merchantDetailsError = error
-                    print(error.localizedDescription,"tanos")
                 }
             }
-            
         }
     }
 }

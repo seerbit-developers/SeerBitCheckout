@@ -11,8 +11,8 @@ struct CardBankAuthentication: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
+    @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @ObservedObject var queryTransactionViewModel = QueryTransactionViewModel()
-    @StateObject  var transactionStatusDataViewModel =  TransactionStatusDataViewModel()
     
     var redirectUrl: String
     
@@ -26,7 +26,8 @@ struct CardBankAuthentication: View {
     @State var goToTransfer: Bool = false
     @State var goToMomo: Bool = false
     @State var goToBankAccount: Bool = false
-    
+    @State var goToSuccessScreen: Bool = false
+    @State var closeSdk: Bool = false
     
     var body: some View {
         
@@ -74,7 +75,7 @@ struct CardBankAuthentication: View {
                     }
                 }
                 Spacer().frame(height: 100)
-                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {transactionStatusDataViewModel.startSeerbitCheckout = true})
+                ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {closeSdk = true})
             }
             Spacer()
             CustomFooter()
@@ -83,7 +84,8 @@ struct CardBankAuthentication: View {
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
         .navigationDestination(isPresented: $goToTransfer){TransferDetails(transactionReference: clientDetailsViewModel.paymentReference)}
         .navigationDestination(isPresented: $goToMomo){MomoInitiate()}
-        .navigationDestination(isPresented: $transactionStatusDataViewModel.startSeerbitCheckout){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
+        .navigationDestination(isPresented: $goToSuccessScreen){SuccessScreen()}
+        .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "")}
         
         .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
             
@@ -91,8 +93,9 @@ struct CardBankAuthentication: View {
                && queryTransactionResponse?.data?.code == "00"){
                 
                 // transaction confirmed
-                showSuccesDialog = true
+                transactionStatusDataViewModel.transactionStatusData = queryTransactionResponse
                 confirmingTransaction = false
+                goToSuccessScreen = true
                 
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code == "S20"){
@@ -122,16 +125,6 @@ struct CardBankAuthentication: View {
                 buttonLeftAction: {},
                 buttonRightAction: {},
                 singleButtonAction: {showErrorDialog.toggle()})
-            .interactiveDismissDisabled(true)
-            .presentationDetents([.fraction(0.4)])
-        }
-        .sheet(isPresented: $showSuccesDialog){
-            SuccessModal(
-                buttonAction: {
-                    // close the sdk
-                    showSuccesDialog.toggle()
-                }
-            )
             .interactiveDismissDisabled(true)
             .presentationDetents([.fraction(0.4)])
         }
