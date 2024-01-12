@@ -9,11 +9,13 @@ import SwiftUI
 
 struct SuccessScreen: View {
     @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
+    @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel
     let title: String = "Success"
     let description: String = "Transaction is completed successfully"
     let buttonText: String  = "Close"
     
     @State var closeSdk: Bool = false
+    
     
     var body: some View {
         VStack{
@@ -27,7 +29,12 @@ struct SuccessScreen: View {
                 .frame(width: 60, height: 60)
                 .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
                 .aspectRatio(0.75, contentMode: .fit)
-            Spacer().frame(height: 10)
+            Spacer().frame(height: 20)
+            Text(clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount))
+                .foregroundColor(Color(uiColor: UIColor(named: "dusk", in: .module, compatibleWith: nil)!))
+                .fontWeight(.semibold)
+                .font(.system(size: 14))
+            Spacer().frame(height: 20)
             Text(description)
                 .foregroundColor(Color(uiColor: UIColor(named: "dusk", in: .module, compatibleWith: nil)!))
                 .fontWeight(.light)
@@ -39,5 +46,12 @@ struct SuccessScreen: View {
         .navigationDestination(isPresented: $closeSdk){InitSeerbitCheckout(amount: -123456789, fullName: "backhome", mobileNumber: "", publicKey: "", email: "", transactionStatusData: transactionStatusDataViewModel.transactionStatusData)}
         .padding(.horizontal)
         .navigationBarBackButtonHidden(true)
+        .onAppear{
+            let delay = DispatchTime.now() + .seconds(4)
+            DispatchQueue.main.asyncAfter(deadline: delay) {
+                // authomatically close sdk after 4 seconds
+                closeSdk = true
+            }
+        }
     }
 }

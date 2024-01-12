@@ -36,6 +36,12 @@ struct CardInitiate: View {
     @State var startSeerbitCheckout: Bool? = nil
     @State var closeSdk: Bool = false
     
+    @State private var isCardValid: Bool? = nil
+    @State private var isexpiryDateValid: Bool? = nil
+    @State private var isCvvValid: Bool? = nil
+    
+    @State private var  slashToggle = true
+    
     var body: some View {
         
         VStack(alignment: .center, spacing: 0){
@@ -62,14 +68,46 @@ struct CardInitiate: View {
                     .padding(.horizontal, 11)
                     .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
-                    Spacer().frame(height: 10)
+                    if(isCardValid == false){
+                        Spacer().frame(height: 2)
+                        HStack{
+                            Text("Invalid card details")
+                                .fontWeight(.regular)
+                                .font(.system(size: 9))
+                                .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
+                                .multilineTextAlignment(.leading)
+                            Spacer()
+                        }
+                    }
+                    
+                    Spacer().frame(height: 20)
                     HStack{
-                        CustomInput(value: $expiryDate, placeHolder: "MM/YY", keyboardType: UIKeyboardType.numbersAndPunctuation)
+                        VStack{
+                            CustomInput(value: $expiryDate, placeHolder: "MM/YY", keyboardType: UIKeyboardType.numbersAndPunctuation)
+                            HStack{
+                                Text(isexpiryDateValid == true || isexpiryDateValid == nil ? "" : "Invalid expiry date")
+                                    .fontWeight(.regular)
+                                    .font(.system(size: 9))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
+                                    .multilineTextAlignment(.leading)
+                                Spacer()
+                            }
+                        }
                         Spacer().frame(width: 10)
-                        CustomInput(value: $cvv, placeHolder: "CVV", keyboardType: UIKeyboardType.numbersAndPunctuation)
+                        VStack{
+                            CustomInput(value: $cvv, placeHolder: "CVV", keyboardType: UIKeyboardType.numbersAndPunctuation)
+                            HStack{
+                                Text(isCvvValid == true || isCvvValid == nil ? "" : "Invalid cvv")
+                                    .fontWeight(.regular)
+                                    .font(.system(size: 9))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
+                                    .multilineTextAlignment(.leading)
+                                Spacer()
+                            }
+                        }
                     }
                     Spacer().frame(height: 30)
-                    CustomButton(buttonLabel: clientDetailsViewModel.currency + formatInputDouble(input: clientDetailsViewModel.totalAmount)){
+                    CustomButton(buttonLabel: "Pay " + clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount)){
                         if let year = expiryDate.split(separator:"/").last {
                             clientDetailsViewModel.expiryYear = String(year)
                         }
@@ -159,6 +197,27 @@ struct CardInitiate: View {
                 cardIcon = ""
                 cardViewModel.fetchCardBin(body: cardNumber)
             }else if (cardNumber.count < 6){cardIcon = ""}
+            
+            if(validateCard(value: cardNumber)){isCardValid = true}else{isCardValid = false}
+        }
+        .onChange(of: cvv){ cvv in
+            if(cvv.count == 3){ isCvvValid = true}else{isCvvValid = false}
+        }
+        .onChange(of: expiryDate){ date in
+
+//            if date.count == 2 && !date.contains("/") && slashToggle {
+//                expiryDate = date + "/"
+//                print("scsdfdsd2", expiryDate)
+//                slashToggle = true
+//            }
+//            else if date.count == 3 && date.last == "/" {
+//                expiryDate.removeLast()
+//                slashToggle = false
+//                print("scsdfdsd1", expiryDate)
+//            }
+            
+            if(expiryDate.count == 5){isexpiryDateValid = true}else{isexpiryDateValid = false}
+            
         }
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(

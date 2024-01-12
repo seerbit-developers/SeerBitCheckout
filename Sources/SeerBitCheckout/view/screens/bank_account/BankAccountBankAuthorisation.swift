@@ -27,6 +27,8 @@ struct BankAccountBankAuthorisation: View {
     @State var goToSuccessScreen: Bool = false
     @State var closeSdk: Bool = false
     
+    @State private var canNavigateBack = false
+    
     var body: some View {
         
         VStack(alignment: .center, spacing: 0){
@@ -48,10 +50,12 @@ struct BankAccountBankAuthorisation: View {
                         .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                         .font(.system(size: 15))
+                        .multilineTextAlignment(.center)
                     Spacer().frame(height: 20)
                     
                     Spacer().frame(height: 30)
                     CustomButton(buttonLabel: "Authenticate Payment"){
+                        canNavigateBack = true
                         confirmingTransaction = true
                         queryTransactionViewModel.queryTransaction(reference:clientDetailsViewModel.paymentReference)
                         if let url = URL(string: redirectUrl) {
@@ -68,7 +72,6 @@ struct BankAccountBankAuthorisation: View {
             }
             Spacer()
             CustomFooter()
-            
         }
         .navigationDestination(isPresented: $goToCard){CardInitiate()}
         .navigationDestination(isPresented: $goToUssd){SelectUssdBank()}
@@ -94,17 +97,18 @@ struct BankAccountBankAuthorisation: View {
                 )
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code != "S20" && queryTransactionResponse?.data?.code != "00"){
-                
+                canNavigateBack = false
                 confirmingTransaction = false
                 errorDescription = queryTransactionViewModel.queryTransactionResponse?.message ?? "Transaction query process has failed"
                 showErrorDialog = true
             }
         }
-        .onReceive(queryTransactionViewModel.$queryTransactionResponseError){queryTransactionResponseError in
+        .onReceive(queryTransactionViewModel.$queryTransactionResponseError){ queryTransactionResponseError in
             
             if(queryTransactionResponseError != nil){
+                canNavigateBack = false
                 confirmingTransaction = false
-                errorDescription = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query process has failed"
+                errorDescription = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query has failed"
                 showErrorDialog = true
             }
         }
@@ -118,5 +122,6 @@ struct BankAccountBankAuthorisation: View {
             .presentationDetents([.fraction(0.4)])
         }
         .padding(20)
+        .navigationBarBackButtonHidden(canNavigateBack)
     }
 }

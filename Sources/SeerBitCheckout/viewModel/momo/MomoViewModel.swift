@@ -26,7 +26,7 @@ class MomoViewModel: ObservableObject {
     
     func fetchMomoProviders (countryCode: String, businessNumber: String){
         momoService.fetchMomoProviders(countryCode: countryCode, businessNumber: businessNumber){ result in
-            print(result, "momo providers res")
+
             DispatchQueue.main.async {
                 switch result{
                 case .success (let momoNetworks):
@@ -34,7 +34,6 @@ class MomoViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.momoProvidersResponseError = error
-                    print(error.localizedDescription,"tanos momo providers")
                 }
             }
         }
@@ -42,7 +41,7 @@ class MomoViewModel: ObservableObject {
     
     func initiateMomoTransaction (body: MomoInitiateRequestDataModel){
         momoService.initiateMomoTransaction(body: body){ result in
-            print(result, "momo initiate res")
+
             DispatchQueue.main.async {
                 switch result{
                 case .success (let momoInitiateResponse):
@@ -50,7 +49,6 @@ class MomoViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.momoInitiateResponseError = error
-                    print(error.localizedDescription,"tanos momo intiate error")
                 }
             }
         }
@@ -66,7 +64,6 @@ class MomoViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.momoOtpResponseError = error
-                    print(error.localizedDescription,"tanos momo otp error")
                 }
             }
         }

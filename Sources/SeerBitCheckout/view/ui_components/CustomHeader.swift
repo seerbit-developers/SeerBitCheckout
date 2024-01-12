@@ -13,7 +13,6 @@ struct CustomHeader: View {
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel
     @EnvironmentObject var   clientDetailsViewModel: ClientDetailsViewModel
     @StateObject  var cardViewModel: CardViewModel = CardViewModel()
-    @State var amount: String = ""
     
     
     var body: some View {
@@ -59,7 +58,7 @@ struct CustomHeader: View {
                     .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                     .font(.system(size: 14))
                 Spacer().frame(height: 3)
-                Text("surchage \(clientDetailsViewModel.fee)")
+                Text("Fee \(clientDetailsViewModel.fee)")
                     .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                     .fontWeight(.light)
                     .font(.system(size: 12))

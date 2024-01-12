@@ -155,7 +155,7 @@ internal func formatInputDouble(input: String?) -> String {
 }
 
 
-public func generateRandomReference() -> String {
+internal func generateRandomReference() -> String {
     let characters = "ABCDEFGHIJKLMNOPQRSTNVabcdef6ghijklmnopqrstuvwxyzABCD123456789"
     var password = ""
     
@@ -169,5 +169,33 @@ public func generateRandomReference() -> String {
     let truncatedUuid = String(uuid.prefix(15))
     
     return "SBT-T" + truncatedUuid
+}
+
+func validateCard(value: String) -> Bool {
+    // 1. Check for valid characters (digits, dashes, spaces)
+    guard value.range(of: "^[0-9-\\s]+$", options: .regularExpression) != nil, value.count > 6 else {
+        return false
+    }
+
+    // 2. Remove non-digit characters
+    let digits = value.filter { $0.isWholeNumber }
+
+    // 3. Apply the Luhn algorithm
+    var checkSum = 0
+    var isEven = false
+
+    for digit in digits.reversed() {
+        let digitValue = Int(String(digit))!
+
+        if isEven {
+            checkSum += digitValue * 2 > 9 ? digitValue * 2 - 9 : digitValue * 2
+        } else {
+            checkSum += digitValue
+        }
+
+        isEven.toggle()
+    }
+
+    return checkSum % 10 == 0
 }
 

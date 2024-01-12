@@ -63,6 +63,7 @@ struct CardBankAuthentication: View {
                             .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
+                            .multilineTextAlignment(.center)
                         Spacer().frame(height: 40)
                         CustomButton(buttonLabel: "Authorize payment"){
                             confirmingTransaction = true
@@ -71,10 +72,10 @@ struct CardBankAuthentication: View {
                                 UIApplication.shared.open(url)
                             }
                         }
-                        Spacer().frame(height: 50)
+                        Spacer().frame(height: 20)
                     }
                 }
-                Spacer().frame(height: 100)
+                Spacer().frame(height: 50)
                 ChangePaymentMethod(onChange: {showPaymentMethods.toggle()}, onCancel: {closeSdk = true})
             }
             Spacer()
@@ -114,10 +115,9 @@ struct CardBankAuthentication: View {
             
             if(queryTransactionResponseError != nil){
                 confirmingTransaction = false
-                queryErrorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query process has failed"
+                queryErrorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query has failed"
                 showErrorDialog = true
             }
-            
         }
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(

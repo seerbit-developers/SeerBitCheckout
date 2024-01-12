@@ -29,6 +29,8 @@ struct UssdCode: View {
     @State var goToSuccessScreen: Bool = false
     @State var closeSdk: Bool = false
     
+    @State private var canNavigateBack = false
+    
     
     var body: some View {
         
@@ -77,6 +79,7 @@ struct UssdCode: View {
                         
                         Spacer().frame(height: 15)
                         CustomButton(buttonLabel: "Confirm Payment"){
+                            canNavigateBack = true
                             confirmingTransaction = true
                             queryTransactionViewModel.queryTransaction(reference: transactionReference)
                         }
@@ -121,7 +124,7 @@ struct UssdCode: View {
                 )
             }else if(queryTransactionResponse != nil
                      && queryTransactionResponse?.data?.code != "S20" && queryTransactionResponse?.data?.code != "00"){
-                
+                canNavigateBack = false
                 confirmingTransaction = false
                 queryErrorMessage = queryTransactionViewModel.queryTransactionResponse?.message ?? "Transaction query process has failed"
                 showErrorDialog = true
@@ -130,11 +133,11 @@ struct UssdCode: View {
         .onReceive(queryTransactionViewModel.$queryTransactionResponseError){queryTransactionResponseError in
             
             if(queryTransactionResponseError != nil){
+                canNavigateBack = false
                 confirmingTransaction = false
-                queryErrorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query process has failed"
+                queryErrorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query has failed"
                 showErrorDialog = true
             }
-            
         }
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(
@@ -148,5 +151,6 @@ struct UssdCode: View {
         }
         .padding(.horizontal,20)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .navigationBarBackButtonHidden(canNavigateBack)
     }
 }

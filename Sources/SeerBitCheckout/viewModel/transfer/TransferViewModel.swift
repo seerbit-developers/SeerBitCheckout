@@ -21,7 +21,7 @@ class TransferViewModel: ObservableObject {
     func initiateTransferTransaction (body:TransferInitiateRequestDataModel){
 
         transferService.initiateTransferTransaction(body: body){ result in
-            print(result, "transfer res")
+
             DispatchQueue.main.async {
                 switch result{
                 case .success (let transferInitiateResponse):
@@ -29,10 +29,8 @@ class TransferViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.transferInitiateResponseError = error
-                    print(error.localizedDescription,"tanos transfer")
                 }
             }
-            
         }
     }
 }

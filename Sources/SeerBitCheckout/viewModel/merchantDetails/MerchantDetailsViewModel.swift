@@ -21,7 +21,7 @@ class MerchantDetailsViewModel: ObservableObject {
     
     func fetchMerchantDetailsData (publicKey: String){
         merchantDetailsService.fetchMerchantDetails(publicKey:publicKey){ result in
-            print(result)
+
             DispatchQueue.main.async {
                 switch result{
                 case .success (let merchantDetails):

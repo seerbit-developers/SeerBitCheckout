@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import SwiftData
 
 @available(iOS 16.0, *)
 public struct InitSeerbitCheckout: View {

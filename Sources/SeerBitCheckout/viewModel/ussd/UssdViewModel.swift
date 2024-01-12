@@ -20,7 +20,7 @@ class UssdViewModel: ObservableObject {
     
     func initiateUssdTransaction (body:UssdInitiateRequestDataModel){
         ussdService.initiateUssd(body:body){ result in
-            print(result)
+
             DispatchQueue.main.async {
                 switch result{
                 case .success (let ussdInitiateResponse):
@@ -28,10 +28,8 @@ class UssdViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.ussdInitiateResponseError = error
-                    print(error.localizedDescription,"tanos ussd")
                 }
             }
-            
         }
     }
 }

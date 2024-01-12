@@ -16,9 +16,8 @@ class QueryTransactionViewModel: ObservableObject {
     
     
     func queryTransaction (reference:String){
-        print(reference, " query reference")
         queryTransactionService.queryTransaction(reference: reference){ result in
-            print(result, "query trnx response")
+
             DispatchQueue.main.async {
                 switch result{
                 case .success (let queryTransactionResponse):
@@ -26,7 +25,6 @@ class QueryTransactionViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.queryTransactionResponseError = error
-                    print(error.localizedDescription,"tanos query")
                 }
             }
         }

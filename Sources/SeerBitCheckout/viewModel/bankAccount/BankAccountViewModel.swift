@@ -23,7 +23,6 @@ class BankAccountViewModel: ObservableObject {
     
     internal  func fetchMerchantBanks(){
         bankAccountService.fetchMerchantBanks{ result in
-            print(result, " list of banks")
             DispatchQueue.main.async {
                 switch result{
                 case .success (let banks):
@@ -31,7 +30,6 @@ class BankAccountViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.merchantBanksError = error
-                    print(error.localizedDescription,"tanos merchantBanksError")
                 }
             }
         }
@@ -40,7 +38,6 @@ class BankAccountViewModel: ObservableObject {
     internal func initiateBankAccountTransaction(body: BankAccountInitiateRequestDataModel){
         bankAccountService.initiateBankAccountTransaction(body: body){ result in
             
-            print(result, " init bankaccount res")
             DispatchQueue.main.async {
                 switch result{
                 case .success (let bankaccountResponse):
@@ -48,11 +45,9 @@ class BankAccountViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.bankAccountInitiateError = error
-                    print(error.localizedDescription,"tanos bank account Error")
                 }
             }
         }
     }
-    
     
 }

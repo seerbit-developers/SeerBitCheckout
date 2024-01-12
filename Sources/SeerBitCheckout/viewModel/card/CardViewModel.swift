@@ -26,7 +26,7 @@ class CardViewModel: ObservableObject {
     
     func initiateCardTransaction (body:CardInitiateRequestDataModel){
         cardService.initiateCardTransaction(body:body){ result in
-            print(result, "card response")
+            
             DispatchQueue.main.async {
                 switch result{
                 case .success (let cardInitiateResponse):
@@ -34,7 +34,6 @@ class CardViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.cardInitiateResponseError = error
-                    print(error.localizedDescription,"tanos card")
                 }
             }
         }
@@ -42,7 +41,7 @@ class CardViewModel: ObservableObject {
     
     func postCardTransactionOtp (body:CardOtpRequestDataModel){
         cardService.postCardTransactionOtp(body:body){ result in
-            print(result, "card otp response")
+            
             DispatchQueue.main.async {
                 switch result{
                 case .success (let otpResponse):
@@ -50,7 +49,6 @@ class CardViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.cardOtpResponseError = error
-                    print(error.localizedDescription,"tanos card otp error")
                 }
             }
         }
@@ -58,7 +56,7 @@ class CardViewModel: ObservableObject {
     
     func fetchCardBin (body:String){
         cardService.fetchCardBin(body:body){ result in
-            print(result, "card bin response")
+            
             DispatchQueue.main.async {
                 switch result{
                 case .success (let binResponse):
@@ -66,7 +64,6 @@ class CardViewModel: ObservableObject {
                     
                 case .failure(let error):
                     self.cardBinDataResponseError = error
-                    print(error.localizedDescription,"tanos card bin error")
                 }
             }
         }

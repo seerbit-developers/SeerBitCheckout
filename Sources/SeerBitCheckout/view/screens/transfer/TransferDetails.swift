@@ -69,7 +69,7 @@ struct TransferDetails: View {
                                     .frame(width: .infinity, alignment: .leading)
                                     .font(.system(size: 14))
                             }else {
-                                Text("Transfer exactly this amount including the decimals")
+                                Text("Transfer the exact amount including decimals")
                                     .fontWeight(.regular)
                                     .font(.system(size: 14))
                                     .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
@@ -78,7 +78,7 @@ struct TransferDetails: View {
                                 
                                 HStack{
                                     Spacer()
-                                    Text(formatInputDouble(input: clientDetailsViewModel.totalAmount)).font(.system(size: 25, design: .rounded)).fontWeight(.bold).foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                                    Text(clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount)).font(.system(size: 25, design: .rounded)).fontWeight(.bold).foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                                     Spacer()
                                 }
                                 .padding(8)
