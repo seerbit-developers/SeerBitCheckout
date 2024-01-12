@@ -1,13 +1,5 @@
-//
-//  File.swift
-//  SeerBitCheckout
-//
-//  Created by Miracle Eugene on 20/12/2023.
-//
 
 ![seerbit](https://user-images.githubusercontent.com/74198009/230321289-beb6c9ec-6d29-4d79-84cb-abb0606a23ab.png)
-
-
                                                       
 
 
@@ -28,9 +20,8 @@ SeerBit Native ios sdk is used to seamlessly integrate SeerBit payment gateways 
 https://github.com/seerbit-developers/SeerBitCheckout
 ```
 
-- After Swift package manager adds the package to your project, that is all you need to do
+- After Swift package manager adds the package to your project, import SeerBitCheckout into the file you want to use it.
 
-For newer projects, add to the settings.gradle file instead
 
  
  ## Usage: These parameters must be supplied to the starting struct, InitSeerbitCheckout();
