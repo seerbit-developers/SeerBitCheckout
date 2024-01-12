@@ -28,7 +28,7 @@ https://github.com/seerbit-developers/SeerBitCheckout
  
   ### Required:
   
- - Merchant's live public key
+ - Merchant's live public key // SBTESTPUBK_t4G16GCA1O51AV0Va3PPretaisXubSw1 (This a test public key for test purpose)
  - Amount
  - Customer's full name
  - Customer's email
@@ -104,10 +104,10 @@ struct ContentView: View {
                 .padding(20)
             }
         }
-        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("closeCheckout"))) { data in
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name(NotificationListenerConstants.closeCheckout.rawValue))) { data in
             // This block will be executed when the specified notification is received
             
-            if let jsonData = data.userInfo?["jsonData"] as? Data,
+            if let jsonData = data.userInfo?[NotificationListenerConstants.jsonData.rawValue] as? Data,
                let decodedData = try? JSONDecoder().decode(QueryTransactionDataModel?.self, from: jsonData) {
                 transactionStatusData = decodedData
                 print(decodedData, "data on sdk close")
@@ -176,12 +176,12 @@ class ViewController: UIViewController {
         
         // Add observer for the custom notification
         NotificationCenter.default.addObserver(
-            forName: Notification.Name("closeCheckout"),
+            forName: Notification.Name(NotificationListenerConstants.closeCheckout.rawValue),
             object: nil,
             queue: nil
         ){ notification in
                 
-                if let jsonData = notification.userInfo?["jsonData"] as? Data,
+                if let jsonData = notification.userInfo?[NotificationListenerConstants.jsonData.rawValue] as? Data,
                    let decodedData = try? JSONDecoder().decode(QueryTransactionDataModel.self, from: jsonData) {
                     // Handle the decoded data
                     print(decodedData,"transaction response")
@@ -200,7 +200,7 @@ class ViewController: UIViewController {
             amount: 200,
             fullName: "UIKit example",
             mobileNumber: "09098987676",
-            publicKey: "SBTESTPUBK_t4G16GCA1O51AV0Va3PPretaisXubSw1",
+            publicKey: "business public key",
             email: "String@gmail.com"
         )
         

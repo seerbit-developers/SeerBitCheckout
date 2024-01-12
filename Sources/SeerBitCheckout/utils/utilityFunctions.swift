@@ -15,6 +15,11 @@ public enum paymentMethods: String {
     case momo = "MOMO"
 }
 
+public enum NotificationListenerConstants: String {
+    case closeCheckout = "closeCheckout"
+    case jsonData = "jsonData"
+}
+
 internal func isMerchantTheFeeBearer(merchantDetails: MerchantDetailsDataModel) ->Bool{
     return merchantDetails.payload?.setting?.chargeOption == "MERCHANT"
 }

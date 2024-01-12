@@ -60,7 +60,7 @@ public struct InitSeerbitCheckout: View {
             NotificationCenter.default.post(
                 name: .closeCheckout,
                 object: nil,
-                userInfo: ["jsonData": jsonData]
+                userInfo: [NotificationListenerConstants.jsonData.rawValue: jsonData]
             )
         }else{NotificationCenter.default.post(name: .closeCheckout, object: nil)}
     }
@@ -163,5 +163,5 @@ public struct InitSeerbitCheckout: View {
 
 // Define a notification name
 extension Notification.Name {
-    static let closeCheckout = Notification.Name("closeCheckout")
+    static let closeCheckout = Notification.Name(NotificationListenerConstants.closeCheckout.rawValue)
 }
