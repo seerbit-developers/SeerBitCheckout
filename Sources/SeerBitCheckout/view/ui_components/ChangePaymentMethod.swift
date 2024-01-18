@@ -15,12 +15,11 @@ struct ChangePaymentMethod: View {
         HStack{
             Button(action: {withAnimation{onChange()}}, label: {
                 Text("Change payment method")
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 10)
                     .padding(.vertical, 12)
                     .fontWeight(.regular)
                     .font(.system(size: 13))
                     .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
-                    .font(.system(size: 13))
                     .background(Color(uiColor: UIColor(named: "fadedRed", in: .module, compatibleWith: nil)!))
                     .clipShape(RoundedRectangle(cornerRadius: 5))
             })

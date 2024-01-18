@@ -158,8 +158,6 @@ public struct InitSeerbitCheckout: View {
         .navigationBarBackButtonHidden(true)
     }
 }
-//SBTESTPUBK_t4G16GCA1O51AV0Va3PPretaisXubSw1
-//SBPUBK_WWEQK6UVR1PNZEVVUOBNIQHEIEIM1HJC
 
 // Define a notification name
 extension Notification.Name {

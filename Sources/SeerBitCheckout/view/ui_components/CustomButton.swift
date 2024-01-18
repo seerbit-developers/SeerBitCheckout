@@ -12,6 +12,8 @@ struct CustomButton: View {
     var buttonLabel: String = ""
     @State var backgroundColor: Color = Color.black
     @State var textForegroundColor:Color =  Color.white
+    var buttonDisabled: Bool = false
+    var buttonDisabledColor: Color = Color.gray
     @State var onPress: ()-> Void
 
     
@@ -30,9 +32,10 @@ struct CustomButton: View {
                     Spacer()
                 }
                 .padding(12)
-                .background(backgroundColor)
+                .background(buttonDisabled ? buttonDisabledColor : backgroundColor)
                 .clipShape(RoundedRectangle(cornerRadius: 4))
             })
+            .disabled(buttonDisabled)
         }
     }
 }

@@ -41,6 +41,9 @@ struct CardInitiate: View {
     @State private var isCvvValid: Bool? = nil
     
     @State private var  slashToggle = true
+    @State private var  addSpaceToCardNum = true
+    
+    @State private var buttonDisabled: Bool = true
     
     var body: some View {
         
@@ -107,14 +110,14 @@ struct CardInitiate: View {
                         }
                     }
                     Spacer().frame(height: 30)
-                    CustomButton(buttonLabel: "Pay " + clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount)){
+                    CustomButton(buttonLabel: "Pay " + clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount), buttonDisabled: buttonDisabled){
                         if let year = expiryDate.split(separator:"/").last {
                             clientDetailsViewModel.expiryYear = String(year)
                         }
                         if let month = expiryDate.split(separator:"/").first {
                             clientDetailsViewModel.expiryMonth = String(month)
                         }
-                        clientDetailsViewModel.cardNumber = cardNumber
+                        clientDetailsViewModel.cardNumber = cardNumber.replacingOccurrences(of: " ", with: "")
                         clientDetailsViewModel.cvv = cvv
                         
                         initiatingCardTransaction = true
@@ -193,31 +196,48 @@ struct CardInitiate: View {
             if(cardBinDataResponseError != nil){cardIcon = ""}
         }
         .onChange(of: cardNumber){cardNumber in
-            if(cardNumber.count == 6){
+            if(cardNumber.replacingOccurrences(of: " ", with: "").count == 6){
                 cardIcon = ""
-                cardViewModel.fetchCardBin(body: cardNumber)
-            }else if (cardNumber.count < 6){cardIcon = ""}
+                cardViewModel.fetchCardBin(body: cardNumber.replacingOccurrences(of: " ", with: ""))
+            }else if (cardNumber.replacingOccurrences(of: " ", with: "").count < 6){cardIcon = ""}
             
-            if(validateCard(value: cardNumber)){isCardValid = true}else{isCardValid = false}
+            if((cardNumber.count == 4 || cardNumber.count % 5 == 0) && addSpaceToCardNum){
+                self.cardNumber = cardNumber + " "
+                addSpaceToCardNum = true
+            }else if((cardNumber.count % 5 != 0 && cardNumber.last == " ") || cardNumber.count == 5){
+                addSpaceToCardNum = false
+            }else{addSpaceToCardNum = true}
+            
+            if(validateCard(value: cardNumber)){
+                isCardValid = true
+                if(cardNumber.replacingOccurrences(of: " ", with: "").count > 10 && cvv.count == 3 && expiryDate.count == 5){
+                    buttonDisabled = false
+                }else {buttonDisabled = true}
+            }else{
+                isCardValid = false
+                buttonDisabled = true
+            }
         }
         .onChange(of: cvv){ cvv in
             if(cvv.count == 3){ isCvvValid = true}else{isCvvValid = false}
+            if(cardNumber.replacingOccurrences(of: " ", with: "").count > 10 && cvv.count == 3 && expiryDate.count == 5){
+                buttonDisabled = false
+            }else {buttonDisabled = true}
         }
         .onChange(of: expiryDate){ date in
-
-//            if date.count == 2 && !date.contains("/") && slashToggle {
-//                expiryDate = date + "/"
-//                print("scsdfdsd2", expiryDate)
-//                slashToggle = true
-//            }
-//            else if date.count == 3 && date.last == "/" {
-//                expiryDate.removeLast()
-//                slashToggle = false
-//                print("scsdfdsd1", expiryDate)
-//            }
+            if date.count == 2 && !date.contains("/") && slashToggle {
+                expiryDate = date + "/"
+                slashToggle = true
+            }
+            else if date.count == 3 && date.last == "/" {
+                slashToggle = false
+            }else if (date.count < 2){slashToggle = true}
             
             if(expiryDate.count == 5){isexpiryDateValid = true}else{isexpiryDateValid = false}
             
+            if(cardNumber.replacingOccurrences(of: " ", with: "").count > 10 && cvv.count == 3 && expiryDate.count == 5){
+                buttonDisabled = false
+            }else {buttonDisabled = true}
         }
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(
