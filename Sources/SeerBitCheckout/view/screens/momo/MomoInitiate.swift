@@ -61,7 +61,7 @@ struct MomoInitiate: View {
                 }
             }else{
                 if(showPaymentMethods){
-                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {withAnimation{showPaymentMethods.toggle()}}, onCancelPayment: {}, merchantDetails: merchantDetailsViewModel.merchantDetails)
+                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {withAnimation{showPaymentMethods.toggle()}}, onCancelPayment: {closeSdk = true}, merchantDetails: merchantDetailsViewModel.merchantDetails)
                 }else{
                     HStack{
                         CustomInput(value: $mobileNumber, placeHolder: "Mobile number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)

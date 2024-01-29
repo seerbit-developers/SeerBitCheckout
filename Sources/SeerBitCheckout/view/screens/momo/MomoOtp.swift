@@ -47,7 +47,7 @@ struct MomoOtp: View {
             if(showPaymentMethods){
                 PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {
                     withAnimation{showPaymentMethods.toggle()}
-                }, onCancelPayment: {}, merchantDetails: merchantDetailsViewModel.merchantDetails)
+                }, onCancelPayment: {closeSdk = true}, merchantDetails: merchantDetailsViewModel.merchantDetails)
             }else{
                 if(verifyingOtp || confirmingTransaction){
                     VStack{

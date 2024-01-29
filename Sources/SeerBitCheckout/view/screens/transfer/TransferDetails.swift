@@ -142,7 +142,7 @@ struct TransferDetails: View {
                 }
                 if(showPaymentMethods == true){Spacer().frame(height: 0)}else{Spacer().frame(height: 50)}
                 if(showPaymentMethods){
-                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {withAnimation{showPaymentMethods.toggle()}}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {}, merchantDetails: merchantDetailsViewModel.merchantDetails)
+                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {withAnimation{showPaymentMethods.toggle()}}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {closeSdk = true}, merchantDetails: merchantDetailsViewModel.merchantDetails)
                 }else{
                     ChangePaymentMethod(onChange: {
                         if (fetchingDetails == false && queryingTransaction == false){showPaymentMethods.toggle()}

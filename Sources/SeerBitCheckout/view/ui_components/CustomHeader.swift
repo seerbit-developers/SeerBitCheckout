@@ -50,7 +50,7 @@ struct CustomHeader: View {
                         .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
                         .font(.system(size: 14))
                 }
-            }.frame(maxWidth: .infinity)
+            }.frame(maxWidth: getDeviceWidth())
             Spacer().frame(height: 30)
             VStack(alignment: HorizontalAlignment.leading){
                 Text((clientDetailsViewModel.currency) + (formatInputDouble(input: clientDetailsViewModel.amount)))
@@ -64,6 +64,6 @@ struct CustomHeader: View {
                     .font(.system(size: 12))
             }
         }
-        .frame(maxWidth: .infinity)
+        .frame(maxWidth: getDeviceWidth())
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 public enum paymentMethods: String {
     case ussd = "USSD"
@@ -71,9 +72,9 @@ internal func displayPaymentMethod (paymentMethod: String, merchantDetails: Merc
 }
 
 internal func calculateFee(amount: String, paymentMethod: String, merchantDetails: MerchantDetailsDataModel, cardCountry: String = "")->String{
-    
+
     var paymentFee = ""
-    let  isCardInternational =  cardCountry.count == 0 ? false :   cardCountry.count > 0 && cardCountry.uppercased().contains(merchantDetails.payload?.country?.nameCode ?? "NIGERIA")
+    let  isCardInternational =  cardCountry.count == 0 ? false :   cardCountry.count > 0 && cardCountry.uppercased().contains(merchantDetails.payload?.country?.nameCode?.uppercased() ?? "NIGERIA") == false
     
     if((merchantDetails.payload?.paymentConfigs) != nil && ((merchantDetails.payload?.paymentConfigs?.isEmpty) == false)){
         
@@ -89,11 +90,11 @@ internal func calculateFee(amount: String, paymentMethod: String, merchantDetail
                 
                 var cappedFee: Double = isCardInternational ?
                 Double(paymentConfig.internationalPaymentOptionCapStatus?.inCappedAmount ?? 100)
-                : Double(paymentConfig.paymentOptionCapStatus?.cappedAmount ?? 100)
+                : Double(paymentConfig.paymentOptionCapStatus?.cappedAmount ?? "100.0") ?? 100.00
                 
                 var feePercentage: Double = isCardInternational ?
                 Double(paymentConfig.internationalPaymentOptionFee ?? 100.0)
-                : Double(paymentConfig.paymentOptionFee ?? "100.0") ?? 100.0
+                : Double(paymentConfig.paymentOptionFee ?? 100.0)
                 
                 if(feeModeIsPercentage){
                     var fee = (feePercentage / 100) * (Double(amount) ?? 100.0)
@@ -102,7 +103,7 @@ internal func calculateFee(amount: String, paymentMethod: String, merchantDetail
                         if(fee > cappedFee){paymentFee = String(cappedFee)}else{paymentFee = String(fee)}
                     }else{paymentFee = String(fee)}
                 }else{
-                    var fee = String(paymentConfig.paymentOptionFee ?? "100.0")
+                    var fee = String(paymentConfig.paymentOptionFee ?? 100.0)
                     paymentFee = fee
                 }
             }
@@ -122,7 +123,7 @@ internal func calculateFee(amount: String, paymentMethod: String, merchantDetail
                     
                     var cappedFee: Double = isCardInternational ?
                     Double(paymentConfig.internationalPaymentOptionCapStatus?.inCappedAmount ?? 100)
-                    : Double(paymentConfig.paymentOptionCapStatus?.cappedAmount ?? 100)
+                    : Double(paymentConfig.paymentOptionCapStatus?.cappedAmount ?? 100.0)
                     
                     var feePercentage: Double = isCardInternational ?
                     Double(paymentConfig.internationalPaymentOptionFee ?? 100.0)
@@ -130,7 +131,6 @@ internal func calculateFee(amount: String, paymentMethod: String, merchantDetail
                     
                     if(feeModeIsPercentage){
                         var fee = (feePercentage / 100) * (Double(amount) ?? 100.0)
-                        
                         if(isCappedSettlement){
                             if(fee > cappedFee){paymentFee = String(cappedFee)}else{paymentFee = String(fee)}
                         }else{paymentFee = String(fee)}
@@ -204,3 +204,10 @@ func validateCard(value: String) -> Bool {
     return checkSum % 10 == 0
 }
 
+func getDeviceWidth () -> Double {
+    return UIScreen.main.bounds.width
+}
+
+func getDeviceHeight () -> Double {
+    return UIScreen.main.bounds.height
+}

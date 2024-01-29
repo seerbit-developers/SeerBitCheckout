@@ -49,5 +49,4 @@ class BankAccountViewModel: ObservableObject {
             }
         }
     }
-    
 }

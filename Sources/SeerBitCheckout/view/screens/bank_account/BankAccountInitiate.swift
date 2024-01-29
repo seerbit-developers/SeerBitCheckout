@@ -46,7 +46,7 @@ struct BankAccountInitiate: View {
                 }
             }else{
                 if(showPaymentMethods){
-                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {withAnimation{showPaymentMethods.toggle()}}, onMomo: {goToMomo = true}, onCancelPayment: {},merchantDetails: merchantDetailsViewModel.merchantDetails)
+                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {withAnimation{showPaymentMethods.toggle()}}, onMomo: {goToMomo = true}, onCancelPayment: {closeSdk = true},merchantDetails: merchantDetailsViewModel.merchantDetails)
                 }else{
                     
                     Text("Choose your bank to start this payment")

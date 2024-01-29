@@ -58,7 +58,7 @@ struct CardInitiate: View {
                 }
             }else{
                 if(showPaymentMethods){
-                    PaymentOptions(onCard: {withAnimation{showPaymentMethods.toggle()}}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {},merchantDetails: merchantDetailsViewModel.merchantDetails)
+                    PaymentOptions(onCard: {withAnimation{showPaymentMethods.toggle()}}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {closeSdk = true},merchantDetails: merchantDetailsViewModel.merchantDetails)
                 }else{
                     HStack{
                         CustomInput(value: $cardNumber, placeHolder: "Card Number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)
@@ -259,6 +259,7 @@ struct CardInitiate: View {
             }
         }
         .onReceive(cardViewModel.$cardBinDataResponse){cardBinDataResponse in
+
             clientDetailsViewModel.fee = ""
             clientDetailsViewModel.fee = calculateFee(amount: clientDetailsViewModel.amount, paymentMethod: paymentMethods.card.rawValue, merchantDetails: merchantDetailsViewModel.merchantDetails!, cardCountry: cardBinDataResponse?.country ?? "NIGERIA")
             if(!isMerchantTheFeeBearer(merchantDetails: merchantDetailsViewModel.merchantDetails!)){

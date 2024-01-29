@@ -30,7 +30,7 @@ class ClientDetailsViewModel: ObservableObject {
     @Published var rememberMe = false
     @Published var productId = ""
     @Published var source = "seerbit_checkout"
-    @Published var redirectURL = "http://tinyurl.com/3pmazdkv" // seerbit_ios_checkout://app
+    @Published var redirectURL = "http://tinyurl.com/vbezu3tk" // seerbitioscheckout://app
     @Published var productDescription = "seerbit payment"
     @Published var deviceType = "iPhone"
     @Published var sourceIP = "102.88.63.64"

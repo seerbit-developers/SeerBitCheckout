@@ -51,7 +51,7 @@ public struct InitSeerbitCheckout: View {
     
     
     // Function to notify observers
-   private func onCloseCheckout() {
+    private func onCloseCheckout() {
         
         let data = transactionStatusData
         
@@ -88,6 +88,18 @@ public struct InitSeerbitCheckout: View {
                                 .clipShape(RoundedRectangle(cornerRadius: 2))
                             Spacer().frame(height: 20)
                             Text(merchantDetailsViewModel.merchantDetails?.message ?? "An error has occured. Please be sure you hava a correct live public key")
+                                .multilineTextAlignment(.center)
+                            Spacer().frame(height: 45)
+                            ChangePaymentMethod(onChange: {
+                                showErrorDialog = false
+                                checksComplete = true
+                                merchantDetailsViewModel.merchantDetails = nil
+                                merchantDetailsViewModel.merchantDetailsError = nil
+                                merchantDetailsViewModel.fetchMerchantDetailsData(publicKey: clientDetailsViewModel.publicKey)
+                            }, onCancel: {
+                                onCloseCheckout()
+                                checksComplete = true
+                            }, OnChangeText: "Retry", onCancelText: "Cancel")
                         }
                     }else if merchantDetailsViewModel.merchantDetailsError == nil{
                         Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
@@ -108,7 +120,20 @@ public struct InitSeerbitCheckout: View {
                             .clipShape(RoundedRectangle(cornerRadius: 2))
                         Spacer().frame(height: 30)
                         Text("Initialization failed. A network error occured. Please try again")
+                            .multilineTextAlignment(.center)
                             .padding(30)
+                        
+                        Spacer().frame(height: 45)
+                        ChangePaymentMethod(onChange: {
+                            showErrorDialog = false
+                            checksComplete = true
+                            merchantDetailsViewModel.merchantDetails = nil
+                            merchantDetailsViewModel.merchantDetailsError = nil
+                            merchantDetailsViewModel.fetchMerchantDetailsData(publicKey: clientDetailsViewModel.publicKey)
+                        }, onCancel: {
+                            onCloseCheckout()
+                            checksComplete = true
+                        }, OnChangeText: "Retry", onCancelText: "Cancel")
                     }
                 }
                 .onReceive(merchantDetailsViewModel.$merchantDetails){merchantDetails in

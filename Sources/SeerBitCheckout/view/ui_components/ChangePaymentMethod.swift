@@ -10,11 +10,14 @@ import SwiftUI
 struct ChangePaymentMethod: View {
     @State var onChange: ()-> Void
     @State var onCancel: ()-> Void
+    var OnChangeText = "Change payment method"
+    var onCancelText = "Cancel payment"
+    
     var body: some View {
         
         HStack{
             Button(action: {withAnimation{onChange()}}, label: {
-                Text("Change payment method")
+                Text(OnChangeText)
                     .padding(.horizontal, 10)
                     .padding(.vertical, 12)
                     .fontWeight(.regular)
@@ -25,7 +28,7 @@ struct ChangePaymentMethod: View {
             })
             
             Button(action: {withAnimation{onCancel()}}, label: {
-                Text("Cancel payment")
+                Text(onCancelText)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
                     .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))

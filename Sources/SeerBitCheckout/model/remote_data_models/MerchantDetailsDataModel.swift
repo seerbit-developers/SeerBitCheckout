@@ -65,7 +65,7 @@ struct PaymentConfig: Codable {
     let allowOption: Bool?
     let status, paymentOptionFeeMode: String?
     let applyFixCharge: Bool?
-    let paymentOptionFee: String?
+    let paymentOptionFee: Double?
     let internationalPaymentOptionFee: Double?
     let internationalPaymentOptionMode: String?
     let paymentOptionCapStatus: PaymentOptionCapStatus?
@@ -138,7 +138,7 @@ struct DefaultPaymentOption: Codable {
     let paymentOptionFee: String?
     let internationalPaymentOptionFee: Double?
     let internationalPaymentOptionMode: String?
-    let paymentOptionCapStatus: PaymentOptionCapStatus?
+    let paymentOptionCapStatus: DefaultPaymentOptionPaymentOptionCapStatus?
     let internationalPaymentOptionCapStatus: InternationalPaymentOptionCapStatus?
     let fixCharge: String?
 
@@ -155,9 +155,14 @@ struct InternationalPaymentOptionCapStatus: Codable {
 }
 
 // MARK: - PaymentOptionCapStatus
+struct DefaultPaymentOptionPaymentOptionCapStatus: Codable {
+    let cappedSettlement: String?
+    let cappedAmount: Double?
+}
+
 struct PaymentOptionCapStatus: Codable {
     let cappedSettlement: String?
-    let cappedAmount: Int?
+    let cappedAmount: String?
 }
 
 // MARK: - Setting

@@ -87,7 +87,7 @@ struct UssdCode: View {
                     }
                 }
                 if(showPaymentMethods){
-                    PaymentOptions(onCard: {goToCard = true}, onUssd: {withAnimation{showPaymentMethods.toggle()}}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {}, merchantDetails: merchantDetailsViewModel.merchantDetails)
+                    PaymentOptions(onCard: {goToCard = true}, onUssd: {withAnimation{showPaymentMethods.toggle()}}, onTransfer: {goToTransfer = true}, onBankAccount: {goToBankAccount = true}, onMomo: {goToMomo = true}, onCancelPayment: {closeSdk = true}, merchantDetails: merchantDetailsViewModel.merchantDetails)
                 }else{
                     if(confirmingTransaction){Spacer().frame(height: 50)}else{Spacer().frame(height: 120)}
                     ChangePaymentMethod(onChange: {

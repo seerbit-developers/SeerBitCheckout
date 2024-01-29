@@ -49,7 +49,7 @@ struct BankAccountNumber: View {
                 }
             }else{
                 if(showPaymentMethods){
-                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {withAnimation{showPaymentMethods.toggle()}}, onMomo: {goToMomo = true}, onCancelPayment: {},merchantDetails: merchantDetailsViewModel.merchantDetails)
+                    PaymentOptions(onCard: {goToCard = true}, onUssd: {goToUssd = true}, onTransfer: {goToTransfer = true}, onBankAccount: {withAnimation{showPaymentMethods.toggle()}}, onMomo: {goToMomo = true}, onCancelPayment: {closeSdk = true},merchantDetails: merchantDetailsViewModel.merchantDetails)
                 }else{
                     Text(showAccountNumberInput ? "Enter your  Access Bank  Account Number"
                          : showOtpInput ? "Kindly enter the OTP sent to your mobile number or email"
