@@ -22,7 +22,15 @@ https://github.com/seerbit-developers/SeerBitCheckout
 
 - After Swift package manager adds the package to your project, import SeerBitCheckout into the file you want to use it.
 
+### Configure deeplink in your project
 
+- Add deeplink configuration to your project with the following custom uri scheme:
+
+```
+seerbitioscheckout
+```
+- The most straightforward way to add a deeplink is to click on the info tab when you select your project target. Click on the URL Types chevron and paste "seerbitioscheckout" on URL Schemes placeholder.
+- Note that if you already have a url scheme for your project, you still have to create another one with the custom url scheme above.
  
  ## Usage: These parameters must be supplied to the starting struct, InitSeerbitCheckout();
  
