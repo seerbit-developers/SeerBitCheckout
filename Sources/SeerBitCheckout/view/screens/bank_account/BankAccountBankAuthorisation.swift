@@ -47,7 +47,7 @@ struct BankAccountBankAuthorisation: View {
                     
                     Text("Please click the button below to authenticate with your bank")
                         .fontWeight(.regular)
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(.dark))
                         .frame(alignment: .leading)
                         .font(.system(size: 15))
                         .multilineTextAlignment(.center)
