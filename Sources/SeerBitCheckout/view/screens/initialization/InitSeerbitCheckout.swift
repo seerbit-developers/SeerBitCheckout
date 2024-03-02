@@ -80,6 +80,7 @@ public struct InitSeerbitCheckout: View {
                                 .environmentObject(clientDetailsViewModel)
                                 .environmentObject(transactionStatusDataViewModel)
                                 .navigationBarBackButtonHidden(true)
+                                .preferredColorScheme(.light)
                         }else {
                             Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
                                 .resizable()
@@ -136,6 +137,7 @@ public struct InitSeerbitCheckout: View {
                         }, OnChangeText: "Retry", onCancelText: "Cancel")
                     }
                 }
+                .preferredColorScheme(.light)
                 .onReceive(merchantDetailsViewModel.$merchantDetails){merchantDetails in
                     if(merchantDetails?.responseCode  == "00" ){
                         

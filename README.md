@@ -30,6 +30,7 @@ https://github.com/seerbit-developers/SeerBitCheckout
 seerbitioscheckout
 ```
 - The most straightforward way to add a deeplink is to click on the info tab when you select your project target. Click on the URL Types chevron and paste "seerbitioscheckout" on URL Schemes placeholder.
+- This sdk works for iOS 16.0 and above. Make sure your project is targeting iOS 16.0 and above.
 - Note that if you already have a url scheme for your project, you still have to create another one with the custom url scheme above.
  
  ## Usage: These parameters must be supplied to the starting struct, InitSeerbitCheckout();
@@ -49,7 +50,7 @@ seerbitioscheckout
  - currency //defaults to merchant's country currency
  - country //defaults to merchant's country
  - pocketReference // used when money is to be moved to pocket
- - transactionPaymentReference //we generate payment reference for each transaction, but if you supply yours, we will use it.
+ - transactionPaymentReference //we generate payment reference for each transaction, but if you supply yours, the sdk will use it.
  - tokenize // used only when card is to be tokenized -  defaults to false
  - productDescription //defaults to empty string
 

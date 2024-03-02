@@ -125,7 +125,7 @@ struct MomoOtp: View {
             }
         }
         .onReceive(queryTransactionViewModel.$queryTransactionResponse){queryTransactionResponse in
-            
+
             if(queryTransactionResponse != nil
                && queryTransactionResponse?.data?.code == "00"){
                 
@@ -148,13 +148,12 @@ struct MomoOtp: View {
             }
         }
         .onReceive(queryTransactionViewModel.$queryTransactionResponseError){queryTransactionResponseError in
-            
+
             if(queryTransactionResponseError != nil){
                 confirmingTransaction = false
-                errorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query process has failed"
+                errorMessage = queryTransactionViewModel.queryTransactionResponseError?.localizedDescription ?? "Transaction query has failed"
                 showErrorDialog = true
             }
-            
         }
         .sheet(isPresented: $showErrorDialog){
             ErrorModal(

@@ -20,7 +20,7 @@ struct CustomHeader: View {
             Spacer().frame(height: 20)
             HStack(alignment: VerticalAlignment.center){
                 if merchantDetails?.payload?.logo  == nil {
-                    Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
+                    Image(.checkoutLogo)
                         .resizable()
                         .frame(width: 50, height: 50)
                         .aspectRatio(contentMode: .fit)
@@ -28,7 +28,7 @@ struct CustomHeader: View {
                 }else{
                     if #available(iOS 15.0, *){
                         AsyncImage(url: URL(string: merchantDetails?.payload?.logo  ?? ""))
-                        { image in image.resizable() } placeholder: { Color(uiColor: UIColor(named: "porcelain", in: .module, compatibleWith: nil)!) }
+                        { image in image.resizable() } placeholder: { Color(.porcelain) }
                             .clipShape(RoundedRectangle(cornerRadius: 2))
                             .frame(width: 50, height: 50)
                             .aspectRatio(contentMode: .fit)
@@ -42,12 +42,12 @@ struct CustomHeader: View {
                 VStack(alignment: HorizontalAlignment.trailing){
                     Text(clientDetailsViewModel.fullName)
                         .fontWeight(.bold)
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(.dark))
                         .font(.system(size: 14))
                     
                     Text(clientDetailsViewModel.email)
                         .fontWeight(.regular)
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(.dark))
                         .font(.system(size: 14))
                 }
             }.frame(maxWidth: getDeviceWidth())
@@ -55,11 +55,11 @@ struct CustomHeader: View {
             VStack(alignment: HorizontalAlignment.leading){
                 Text((clientDetailsViewModel.currency) + (formatInputDouble(input: clientDetailsViewModel.amount)))
                     .fontWeight(.bold)
-                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                    .foregroundColor(Color(.dark))
                     .font(.system(size: 14))
                 Spacer().frame(height: 3)
                 Text("Fee \(clientDetailsViewModel.fee)")
-                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                    .foregroundColor(Color(.dark))
                     .fontWeight(.light)
                     .font(.system(size: 12))
             }
