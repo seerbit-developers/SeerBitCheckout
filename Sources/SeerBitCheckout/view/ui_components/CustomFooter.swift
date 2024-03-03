@@ -10,11 +10,11 @@ import SwiftUI
 struct CustomFooter: View {
     var body: some View {
         HStack{
-            Image(uiImage: UIImage(named: "footer_lock", in: .module, with: nil)!)
+            Image(uiImage: UIImage(named: "footer_lock", in: HelperBundle.resolvedBundle, with: nil)!)
                 .resizable()
                 .frame(width: 12, height: 12)
             Text("Secured by")
-                .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                 .fontWeight(.regular)
                 .font(.system(size: 14))
 //            Text("SeerBit").font(.custom("Android 101", size: 15)).bold()

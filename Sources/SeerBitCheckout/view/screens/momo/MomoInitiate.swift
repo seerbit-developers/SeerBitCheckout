@@ -48,7 +48,7 @@ struct MomoInitiate: View {
                     Text("Hold on tight while we confirm this payment")
                         .fontWeight(.regular)
                         .font(.system(size: 14))
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                     Spacer().frame(height: 20)
                 }
@@ -67,7 +67,7 @@ struct MomoInitiate: View {
                         CustomInput(value: $mobileNumber, placeHolder: "Mobile number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)
                     }
                     .padding(.horizontal, 11)
-                    .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
+                    .border(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!), width: 2)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     Spacer().frame(height: 20)
                     
@@ -80,15 +80,15 @@ struct MomoInitiate: View {
                         }, label: {
                             HStack{
                                 Text(chosenProvider)
-                                    .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     .fontWeight(.bold)
                                     .font(.system(size: 14))
                                 Spacer()
-                                Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
+                                Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             }
                             .padding(11)
                             .frame(width: .infinity)
-                            .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
+                            .border(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!), width: 2)
                             .clipShape(RoundedRectangle(cornerRadius: 4))
                         })
                     }
@@ -115,7 +115,7 @@ struct MomoInitiate: View {
                                                 VStack{
                                                     Divider()
                                                         .frame(height: 0.3)
-                                                        .overlay(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
+                                                        .overlay(Color(uiColor: UIColor(named: "starDust", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                                 }
                                             }
                                         })
@@ -127,12 +127,12 @@ struct MomoInitiate: View {
                             }
                             .frame(alignment: .leading)
                             .padding(.horizontal)
-                            .background(Color(uiColor: UIColor(named: "porcelain", in: .module, compatibleWith: nil)!))
+                            .background(Color(uiColor: UIColor(named: "porcelain", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .clipShape(RoundedRectangle(cornerRadius: 10))
                         }
                         .frame(height: 150, alignment: .leading)
                         .padding(0)
-                        .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
+                        .border(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!), width: 2)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }

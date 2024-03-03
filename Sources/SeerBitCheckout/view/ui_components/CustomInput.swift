@@ -33,7 +33,7 @@ struct CustomInput: View {
         }
         .padding(.horizontal, 11)
         .padding(.vertical, 12)
-        .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: CGFloat(borderWidth))
+        .border(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!), width: CGFloat(borderWidth))
         .clipShape(RoundedRectangle(cornerRadius: 4))
     }
 }

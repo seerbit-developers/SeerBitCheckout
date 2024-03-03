@@ -82,7 +82,7 @@ public struct InitSeerbitCheckout: View {
                                 .navigationBarBackButtonHidden(true)
                                 .preferredColorScheme(.light)
                         }else {
-                            Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
+                            Image(uiImage: UIImage(named: "checkout_logo", in: HelperBundle.resolvedBundle, with: nil)!)
                                 .resizable()
                                 .frame(width: 60, height: 60)
                                 .aspectRatio(contentMode: .fit)
@@ -103,7 +103,7 @@ public struct InitSeerbitCheckout: View {
                             }, OnChangeText: "Retry", onCancelText: "Cancel")
                         }
                     }else if merchantDetailsViewModel.merchantDetailsError == nil{
-                        Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
+                        Image(uiImage: UIImage(named: "checkout_logo", in: HelperBundle.resolvedBundle, with: nil)!)
                             .resizable()
                             .frame(width: 60, height: 60)
                             .aspectRatio(contentMode: .fit)
@@ -114,7 +114,7 @@ public struct InitSeerbitCheckout: View {
                         LoadingIndicator()
                         
                     } else if merchantDetailsViewModel.merchantDetailsError != nil{
-                        Image(uiImage: UIImage(named: "checkout_logo", in: .module, with: nil)!)
+                        Image(uiImage: UIImage(named: "checkout_logo", in: HelperBundle.resolvedBundle, with: nil)!)
                             .resizable()
                             .frame(width: 60, height: 60)
                             .aspectRatio(contentMode: .fit)

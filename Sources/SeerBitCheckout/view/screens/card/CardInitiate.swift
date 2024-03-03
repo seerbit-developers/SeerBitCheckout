@@ -64,12 +64,12 @@ struct CardInitiate: View {
                         CustomInput(value: $cardNumber, placeHolder: "Card Number", borderWidth: 0, keyboardType: UIKeyboardType.numbersAndPunctuation)
                         HStack{
                             if(!cardIcon.isEmpty){
-                                Image(uiImage: UIImage(named: cardIcon, in: .module, with: nil)!)
+                                Image(uiImage: UIImage(named: cardIcon, in: HelperBundle.resolvedBundle, with: nil)!)
                             }
                         }
                     }
                     .padding(.horizontal, 11)
-                    .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
+                    .border(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!), width: 2)
                     .clipShape(RoundedRectangle(cornerRadius: 4))
                     if(isCardValid == false){
                         Spacer().frame(height: 2)
@@ -77,7 +77,7 @@ struct CardInitiate: View {
                             Text("Invalid card details")
                                 .fontWeight(.regular)
                                 .font(.system(size: 9))
-                                .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
+                                .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                 .multilineTextAlignment(.leading)
                             Spacer()
                         }
@@ -91,7 +91,7 @@ struct CardInitiate: View {
                                 Text(isexpiryDateValid == true || isexpiryDateValid == nil ? "" : "Invalid expiry date")
                                     .fontWeight(.regular)
                                     .font(.system(size: 9))
-                                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     .multilineTextAlignment(.leading)
                                 Spacer()
                             }
@@ -103,7 +103,7 @@ struct CardInitiate: View {
                                 Text(isCvvValid == true || isCvvValid == nil ? "" : "Invalid cvv")
                                     .fontWeight(.regular)
                                     .font(.system(size: 9))
-                                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     .multilineTextAlignment(.leading)
                                 Spacer()
                             }

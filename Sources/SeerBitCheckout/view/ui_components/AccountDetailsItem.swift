@@ -17,13 +17,13 @@ struct AccountDetailsItem: View {
        HStack{
            Text(key)
                .font(.system(size: 13)).fontWeight(.light)
-               .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+               .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
            Spacer()
            if canCopy ?? false {
                HStack{
                    Text(value)
                        .font(.system(size: 12)).fontWeight(.medium)
-                       .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                       .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                    Image(systemName: "doc.on.doc")
                        .resizable()
                        .onTapGesture {toCopy()}
@@ -33,7 +33,7 @@ struct AccountDetailsItem: View {
            }else {
                Text(value)
                    .font(.system(size: 12)).fontWeight(.medium)
-                   .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                   .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
            }
        }
    }

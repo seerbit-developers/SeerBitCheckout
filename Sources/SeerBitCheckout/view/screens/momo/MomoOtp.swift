@@ -54,7 +54,7 @@ struct MomoOtp: View {
                         Text("Hold on tight while we confirm this payment")
                             .fontWeight(.regular)
                             .font(.system(size: 14))
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                         Spacer().frame(height: 20)
                         LoadingIndicator()
@@ -64,7 +64,7 @@ struct MomoOtp: View {
                     VStack{
                         Spacer().frame(height: 5)
                         Text("Kindly enter the OTP sent to *******\(phoneNumberSubstring) and *******\(emailSubstring)")
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
                         Spacer().frame(height: 40)
@@ -75,7 +75,7 @@ struct MomoOtp: View {
                         //                            Spacer()
                         //                            Button(action: /*@START_MENU_TOKEN@*/{}/*@END_MENU_TOKEN@*/, label: {
                         //                                Text("Resend OTP")
-                        //                                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        //                                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                         //                                    .fontWeight(.regular)
                         //                                    .font(.system(size: 13))
                         //                            })

@@ -25,9 +25,9 @@ struct PaymentOptionItem: View {
                     Spacer()
                     if title == "Debit/Credit Card"{
                         HStack{
-                            Image(uiImage: UIImage(named: "verve_icon", in: .module, with: nil)!)
-                            Image(uiImage: UIImage(named: "visa_icon", in: .module, with: nil)!)
-                            Image(uiImage: UIImage(named: "mastercard_icon", in: .module, with: nil)!)
+                            Image(uiImage: UIImage(named: "verve_icon", in: HelperBundle.resolvedBundle, with: nil)!)
+                            Image(uiImage: UIImage(named: "visa_icon", in: HelperBundle.resolvedBundle, with: nil)!)
+                            Image(uiImage: UIImage(named: "mastercard_icon", in: HelperBundle.resolvedBundle, with: nil)!)
                         }
                     }
                     
@@ -39,7 +39,7 @@ struct PaymentOptionItem: View {
                     }
                 }
                 .padding(15)
-                .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
+                .background(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                 .frame(width: 350)
                 .clipShape(RoundedRectangle(cornerRadius: 5))
             })

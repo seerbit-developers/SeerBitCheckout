@@ -53,7 +53,7 @@ struct CardPin: View {
                     VStack{
                         Spacer().frame(height: 5)
                         Text("Enter your 4-digit card pin to authorize this payment")
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
                         Spacer().frame(height: 40)

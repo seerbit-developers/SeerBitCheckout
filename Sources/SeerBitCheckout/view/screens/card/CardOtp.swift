@@ -46,7 +46,7 @@ struct CardOtp: View {
                         Text("Hold on tight while we confirm this payment")
                             .fontWeight(.regular)
                             .font(.system(size: 14))
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                         Spacer().frame(height: 20)
                         LoadingIndicator()
@@ -56,7 +56,7 @@ struct CardOtp: View {
                     VStack{
                         Spacer().frame(height: 5)
                         Text("Kindly enter the OTP sent to *******\(phoneNumberSubstring) and *******\(emailSubstring) or enter the OTP genrated on your hardware token device")
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
                         Spacer().frame(height: 40)

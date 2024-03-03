@@ -42,13 +42,13 @@ struct CardBankAuthentication: View {
                     Text("Hold on tight while we confirm this payment")
                         .fontWeight(.regular)
                         .font(.system(size: 14))
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                     Spacer().frame(height: 20)
                 }else {
                     Text("")
                         .fontWeight(.regular)
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                 }
                 if (confirmingTransaction) {
@@ -60,7 +60,7 @@ struct CardBankAuthentication: View {
                     VStack{
                         Spacer().frame(height: 5)
                         Text("Please click the button below to authenticate with your bank")
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .fontWeight(.regular)
                             .font(.system(size: 13))
                             .multilineTextAlignment(.center)

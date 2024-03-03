@@ -211,16 +211,3 @@ func getDeviceWidth () -> Double {
 func getDeviceHeight () -> Double {
     return UIScreen.main.bounds.height
 }
-
-//func colorHelper (_ colorName: String) -> Color {
-//    
-//    if canImport(SwiftUI) && swift(>=5.5){
-//        // Use .module for SPM users
-//        let colorString = Color(uiColor: UIColor(named: colorName, in: .module, compatibleWith: nil)!)
-//        return colorString
-//    }
-//    else{
-//        // Use main bundle for CocoaPods users
-//        let colorStringForPodsImplementatin = Color(uiColor: UIColor(named: "porcelain", in: Bundle.main, compatibleWith: nil)!)
-//    }
-//}

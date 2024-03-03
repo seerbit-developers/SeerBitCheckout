@@ -57,7 +57,7 @@ struct BankAccountNumber: View {
                          : showDobInput ? "Please enter your birthday" : ""
                     )
                     .fontWeight(.regular)
-                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                     .frame(alignment: .leading)
                     .font(.system(size: 15))
                     Spacer().frame(height: 20)
@@ -75,15 +75,15 @@ struct BankAccountNumber: View {
                             }, label: {
                                 HStack{
                                     Text(dateOfBirth)
-                                        .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
+                                        .foregroundColor(Color(uiColor: UIColor(named: "starDust", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                         .fontWeight(.bold)
                                         .font(.system(size: 14))
                                     Spacer()
-                                    Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: .module, compatibleWith: nil)!))
+                                    Image(systemName: "chevron.down").foregroundColor(Color(uiColor: UIColor(named: "starDust", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                 }
                                 .padding(11)
                                 .frame(width: .infinity)
-                                .border(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!), width: 2)
+                                .border(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!), width: 2)
                                 .clipShape(RoundedRectangle(cornerRadius: 4))
                             })
                         }

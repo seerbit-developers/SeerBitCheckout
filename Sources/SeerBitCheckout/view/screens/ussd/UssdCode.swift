@@ -43,13 +43,13 @@ struct UssdCode: View {
                         Text("Hold on tight while we confirm this payment")
                             .fontWeight(.regular)
                             .font(.system(size: 14))
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                         Spacer().frame(height: 20)
                     }else {
                         Text("")
                             .fontWeight(.regular)
-                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                            .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                             .frame(alignment: .leading)
                     }
                     if (confirmingTransaction) {
@@ -64,7 +64,7 @@ struct UssdCode: View {
                             Spacer()
                         }
                         .padding(10)
-                        .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
+                        .background(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                         .frame(width: 350)
                         .clipShape(RoundedRectangle(cornerRadius: 5))
                         

@@ -49,7 +49,7 @@ struct TransferDetails: View {
                     Text("Hold on tight while we confirm this payment")
                         .fontWeight(.regular)
                         .font(.system(size: 14))
-                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                        .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                         .frame(alignment: .leading)
                     Spacer().frame(height: 20)
                 }
@@ -65,30 +65,30 @@ struct TransferDetails: View {
                             if(errorFetchingDetails){
                                 Text("An error has occured. Please try other payment methods")
                                     .fontWeight(.regular)
-                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     .frame(width: .infinity, alignment: .leading)
                                     .font(.system(size: 14))
                             }else {
                                 Text("Transfer the exact amount including decimals")
                                     .fontWeight(.regular)
                                     .font(.system(size: 14))
-                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     .frame(alignment: .leading)
                                 Spacer().frame(height: 20)
                                 
                                 HStack{
                                     Spacer()
-                                    Text(clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount)).font(.system(size: 25, design: .rounded)).fontWeight(.bold).foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                                    Text(clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount)).font(.system(size: 25, design: .rounded)).fontWeight(.bold).foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     Spacer()
                                 }
                                 .padding(8)
-                                .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
+                                .background(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                 .frame(width: 350)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 
                                 Text("to")
                                     .font(.system(size: 14)).fontWeight(.medium)
-                                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                 VStack{
                                     AccountDetailsItem(
                                         key: "Account Number",
@@ -120,14 +120,14 @@ struct TransferDetails: View {
                                         toCopy: {})
                                 }
                                 .padding(10)
-                                .background(Color(uiColor: UIColor(named: "seaShell", in: .module, compatibleWith: nil)!))
+                                .background(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                 .frame(width: 350)
                                 .clipShape(RoundedRectangle(cornerRadius: 5))
                                 
                                 Text("Account number can only be used once")
                                     .fontWeight(.regular)
                                     .font(.system(size: 14))
-                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: .module, compatibleWith: nil)!))
+                                    .foregroundColor(Color(uiColor: UIColor(named: "redOrange", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                                     .frame(alignment: .leading)
                                 
                                 Spacer().frame(height: 25)
