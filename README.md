@@ -20,7 +20,28 @@ SeerBit Native ios sdk is used to seamlessly integrate SeerBit payment gateways 
 https://github.com/seerbit-developers/SeerBitCheckout
 ```
 
-- After Swift package manager adds the package to your project, import SeerBitCheckout into the file you want to use it.
+- If you prefer to add the project through cocoapods, go to your podfile and add like so:
+
+```
+pod 'SeerBitCheckout', '~> 1.2.6'
+```
+Note that you can always get the latest version from 
+```
+https://cocoapods.org/pods/SeerBitCheckout
+```
+- Then at the root of your project, run 
+
+```
+pod install
+```
+ - If you encounter an error that the description contains 
+ ```
+ Sandbox: deny(1) file-write-create 
+ ```
+ Then go to build settings, under Build Options and switch User Script Sandboxing to "No"
+ 
+
+- After adding the package to your project (either through SPM or Cocoapods), import SeerBitCheckout into the file you want to use it.
 
 ### Configure deeplink in your project
 
