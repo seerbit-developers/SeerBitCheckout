@@ -72,7 +72,7 @@ internal func displayPaymentMethod (paymentMethod: String, merchantDetails: Merc
 }
 
 internal func calculateFee(amount: String, paymentMethod: String, merchantDetails: MerchantDetailsDataModel, cardCountry: String = "")->String{
-
+    
     var paymentFee = ""
     let  isCardInternational =  cardCountry.count == 0 ? false :   cardCountry.count > 0 && cardCountry.uppercased().contains(merchantDetails.payload?.country?.nameCode?.uppercased() ?? "NIGERIA") == false
     
@@ -181,26 +181,26 @@ func validateCard(value: String) -> Bool {
     guard value.range(of: "^[0-9-\\s]+$", options: .regularExpression) != nil, value.count > 6 else {
         return false
     }
-
+    
     // 2. Remove non-digit characters
     let digits = value.filter { $0.isWholeNumber }
-
+    
     // 3. Apply the Luhn algorithm
     var checkSum = 0
     var isEven = false
-
+    
     for digit in digits.reversed() {
         let digitValue = Int(String(digit))!
-
+        
         if isEven {
             checkSum += digitValue * 2 > 9 ? digitValue * 2 - 9 : digitValue * 2
         } else {
             checkSum += digitValue
         }
-
+        
         isEven.toggle()
     }
-
+    
     return checkSum % 10 == 0
 }
 
@@ -211,3 +211,16 @@ func getDeviceWidth () -> Double {
 func getDeviceHeight () -> Double {
     return UIScreen.main.bounds.height
 }
+
+//func colorHelper (_ colorName: String) -> Color {
+//    
+//    if canImport(SwiftUI) && swift(>=5.5){
+//        // Use .module for SPM users
+//        let colorString = Color(uiColor: UIColor(named: colorName, in: .module, compatibleWith: nil)!)
+//        return colorString
+//    }
+//    else{
+//        // Use main bundle for CocoaPods users
+//        let colorStringForPodsImplementatin = Color(uiColor: UIColor(named: "porcelain", in: Bundle.main, compatibleWith: nil)!)
+//    }
+//}

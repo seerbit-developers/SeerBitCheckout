@@ -22,8 +22,8 @@ struct ChangePaymentMethod: View {
                     .padding(.vertical, 12)
                     .fontWeight(.regular)
                     .font(.system(size: 13))
-                    .foregroundColor(Color(.pureRed))
-                    .background(Color(.fadedRed))
+                    .foregroundColor(Color(uiColor: UIColor(named: "pureRed", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
+                    .background(Color(uiColor: UIColor(named: "fadedRed", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                     .clipShape(RoundedRectangle(cornerRadius: 5))
             })
             
@@ -31,10 +31,10 @@ struct ChangePaymentMethod: View {
                 Text(onCancelText)
                     .padding(.horizontal, 20)
                     .padding(.vertical, 12)
-                    .foregroundColor(Color(.dark))
+                    .foregroundColor(Color(uiColor: UIColor(named: "dark", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                     .fontWeight(.regular)
                     .font(.system(size: 13))
-                    .background(Color(.dark))
+                    .background(Color(uiColor: UIColor(named: "seaShell", in: HelperBundle.resolvedBundle, compatibleWith: nil)!))
                     .clipShape(RoundedRectangle(cornerRadius: 5))
             })
         }

@@ -2,7 +2,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "SeerBitCheckout"
-  spec.version      = "1.2.3"
+  spec.version      = "1.2.4"
   spec.summary      = "SeerBit Native ios sdk is used to seamlessly integrate SeerBit payment gateways into Native ios applications."
 
   spec.description  = <<-DESC
