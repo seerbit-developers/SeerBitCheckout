@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct PaymentOptionItem: View {
     
     var title : String

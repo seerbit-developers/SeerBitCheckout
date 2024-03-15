@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct BankAccountInitiate: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel

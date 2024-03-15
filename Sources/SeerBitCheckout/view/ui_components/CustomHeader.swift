@@ -8,6 +8,7 @@
 import SwiftUI
 import SDWebImageSwiftUI
 
+@available(iOS 16.0, *)
 struct CustomHeader: View {
     var merchantDetails : MerchantDetailsDataModel?  = nil
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel

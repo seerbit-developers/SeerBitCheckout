@@ -13,6 +13,7 @@ struct ToastDetails {
 }
 
 
+@available(iOS 16.0, *)
 struct CustomToast: View {
     
     let toastDetails: ToastDetails

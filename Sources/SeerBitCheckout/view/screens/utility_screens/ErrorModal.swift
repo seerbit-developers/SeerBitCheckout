@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct ErrorModal: View {
     let title: String = "Error"
     let description: String?

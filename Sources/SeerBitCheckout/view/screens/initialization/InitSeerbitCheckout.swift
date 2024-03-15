@@ -24,6 +24,11 @@ public struct InitSeerbitCheckout: View {
     var productId: String = ""
     var productDescription: String = ""
     var currency: String = ""
+    var country: String = ""
+    var pocketReference: String = ""
+    var vendorId: String = ""
+    var tokenize: Bool = false
+    
     
     @State var checksComplete: Bool = false
     @State var errorMessage: String = "Amount cannot be a negative value"
@@ -37,7 +42,15 @@ public struct InitSeerbitCheckout: View {
         mobileNumber:String,
         publicKey:String,
         email:String,
-        transactionStatusData: QueryTransactionDataModel? = nil
+        transactionStatusData: QueryTransactionDataModel? = nil,
+        paymentReference: String = "",
+        productId: String = "",
+        productDescription: String = "",
+        currency: String = "",
+        country: String = "",
+        pocketReference: String = "",
+        vendorId: String = "",
+        tokenize: Bool = false
     ){
         
         self.amount = amount
@@ -46,6 +59,14 @@ public struct InitSeerbitCheckout: View {
         self.publicKey = publicKey
         self.email = email
         self.transactionStatusData = transactionStatusData
+        self.paymentReference = paymentReference
+        self.productId = productId
+        self.productDescription = productDescription
+        self.currency = currency
+        self.country = country
+        self.pocketReference = pocketReference
+        self.vendorId = vendorId
+        self.tokenize = tokenize
         
     }
     

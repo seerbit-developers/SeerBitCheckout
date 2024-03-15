@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct PaymentOptions: View {
     let onCard: () -> Void
     let onUssd: () -> Void

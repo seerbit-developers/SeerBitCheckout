@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct UssdCode: View {
     
     @EnvironmentObject var merchantDetailsViewModel: MerchantDetailsViewModel

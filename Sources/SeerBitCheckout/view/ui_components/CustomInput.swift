@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct CustomInput: View {
     @State var textForegroundColor:Color =  Color.black
     @State var backgroundColor: Color = Color.black

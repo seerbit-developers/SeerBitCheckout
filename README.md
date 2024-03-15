@@ -23,7 +23,7 @@ https://github.com/seerbit-developers/SeerBitCheckout
 - If you prefer to add the project through cocoapods, go to your podfile and add like so:
 
 ```
-pod 'SeerBitCheckout', '~> 1.2.6'
+pod 'SeerBitCheckout', '~> 1.2.8'
 ```
 Note that you can always get the latest version from 
 ```

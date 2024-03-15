@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct ChangePaymentMethod: View {
     @State var onChange: ()-> Void
     @State var onCancel: ()-> Void

@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct SuccessScreen: View {
     @EnvironmentObject var transactionStatusDataViewModel: TransactionStatusDataViewModel
     @EnvironmentObject var clientDetailsViewModel: ClientDetailsViewModel

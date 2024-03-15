@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+@available(iOS 16.0, *)
 struct CustomPinComponent: View {
     @State var firstPin: String = ""
     @State var secondPin: String = ""
