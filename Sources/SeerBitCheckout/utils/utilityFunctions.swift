@@ -178,7 +178,7 @@ internal func generateRandomReference() -> String {
 
 func validateCard(value: String) -> Bool {
     // 1. Check for valid characters (digits, dashes, spaces)
-    guard value.range(of: "^[0-9-\\s]+$", options: .regularExpression) != nil, value.count > 6 else {
+    guard value.range(of: "^[0-9-\\s]+$", options: .regularExpression) != nil, value.count > 15, value.count < 20 else {
         return false
     }
     

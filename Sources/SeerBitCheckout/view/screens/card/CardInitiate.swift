@@ -111,7 +111,9 @@ struct CardInitiate: View {
                         }
                     }
                     Spacer().frame(height: 30)
-                    CustomButton(buttonLabel: "Pay " + clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount), buttonDisabled: buttonDisabled){
+                    CustomButton(buttonLabel: "Pay " + clientDetailsViewModel.currency + " " + formatInputDouble(input: clientDetailsViewModel.totalAmount),
+                                 buttonDisabled: (buttonDisabled || isCardValid == nil || isCardValid == false)){
+
                         if let year = expiryDate.split(separator:"/").last {
                             clientDetailsViewModel.expiryYear = String(year)
                         }
@@ -209,9 +211,10 @@ struct CardInitiate: View {
                 addSpaceToCardNum = false
             }else{addSpaceToCardNum = true}
             
-            if(validateCard(value: cardNumber)){
+            if(validateCard(value: cardNumber.replacingOccurrences(of: " ", with: ""))){
                 isCardValid = true
-                if(cardNumber.replacingOccurrences(of: " ", with: "").count > 10 && cvv.count == 3 && expiryDate.count == 5){
+                if(cardNumber.replacingOccurrences(of: " ", with: "").count > 15 && cardNumber.replacingOccurrences(of: " ", with: "").count < 20
+                   && cvv.count == 3 && expiryDate.count == 5){
                     buttonDisabled = false
                 }else {buttonDisabled = true}
             }else{
